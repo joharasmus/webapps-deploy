@@ -6,12 +6,7 @@
     "build": "tsc",
     "test": "jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/joharasmus/webapps-deploy.git"
-  },
   "license": "MIT",
-  "homepage": "https://github.com/joharasmus/webapps-deploy",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.2",
