@@ -4,10 +4,7 @@ on:
 jobs:
   build_test_job:
     name: 'Build and test job'
-    runs-on: ${{ matrix.os }}
-    strategy:
-        matrix:
-          os: [ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
 
     - name: 'Checking out repo code'
