@@ -1,59 +1,34 @@
-# GitHub Action for deploying to Azure Web App
+# For deployment of Azure Web Apps
 
-With the Azure App Service Actions for GitHub, you can automate your workflow to deploy [Azure Web Apps](https://azure.microsoft.com/services/app-service/web/) or [Azure Web Apps for Containers](https://azure.microsoft.com/services/app-service/containers/) using GitHub Actions.
+With this GitHub Action, you can automate the deployment of [Azure Web Apps](https://azure.microsoft.com/services/app-service/web/) or [Azure Web Apps for Containers](https://azure.microsoft.com/services/app-service/containers/).
 
 This repository contains GitHub Action for Azure WebApp to deploy to an Azure WebApp (Windows or Linux). The action supports deploying a folder, *\*.jar*, *\*.war*, and \**.zip* files (except msBuild generated packages).
 
-You can also use this GitHub Action to deploy your customized image into an Azure WebApps container.
+You can also use this GitHub Action to deploy a customized image into an Azure WebApps container.
 
-For deploying container images to Kubernetes, consider using [Kubernetes deploy](https://github.com/Azure/k8s-deploy) action.
-
-The definition of this GitHub Action is in [action.yml](https://github.com/joharasmus/webapps-deploy/blob/master/action.yml).
-
-## Dependencies on other GitHub Actions
+## First: a few reminders
 
 * [Checkout](https://github.com/actions/checkout) your Git repository content into GitHub Actions agent.
-* Authenticate using [Azure Web App Publish Profile](https://github.com/projectkudu/kudu/wiki/Deployment-credentials#site-credentials-aka-publish-profile-credentials) or using the [Azure Login Action](https://github.com/Azure/login). Examples of both are given later in this article.
-
-    The action supports using publish profile for [Azure Web Apps](https://azure.microsoft.com/services/app-service/web/) (both Windows and Linux) and [Azure Web Apps for Containers](https://azure.microsoft.com/services/app-service/containers/) (both Windows and Linux).
-    
- **Note: As of October 2020, Linux web apps will need the app setting `WEBSITE_WEBDEPLOY_USE_SCM` set to `true` before downloading the publish profile from the portal. This requirement will be removed in the future.**
-
-    The action does not support multi-container scenario with publish profile.
+* Authenticate using [Azure Web App Publish Profile](https://github.com/projectkudu/kudu/wiki/Deployment-credentials#site-credentials-aka-publish-profile-credentials) or the [Azure Login Action](https://github.com/Azure/login).
+* This action does not support multi-container scenario with publish profile.
+* If using [Azure Login](https://github.com/Azure/login), ensure you set appropriate values for the `environment` parameter.
 * Enable [Run from Package](https://docs.microsoft.com/en-us/azure/app-service/deploy-run-package#enable-running-from-package), otherwise remote build will take time and the deployment will take longer. 
-
-* To build app code in a specific language based environment, use setup actions:
-  * [Setup DotNet](https://github.com/actions/setup-dotnet) Sets up a dotnet environment by optionally downloading and caching a version of dotnet by SDK version and adding to PATH.
-  * [Setup Node](https://github.com/actions/setup-node) sets up a node environment by optionally downloading and caching a version of node - npm by version spec and add to PATH
-  * [Setup Java](https://github.com/actions/setup-java) sets up Java app environment optionally downloading and caching a version of java by version and adding to PATH. Downloads from [Azul's Zulu distribution](http://static.azul.com/zulu/bin/).
-
+* Use a setup action to install build tools in a specific language based environment (.NET/Java/Python etc.).
 * To build and deploy a containerized app, use [docker-login](https://github.com/Azure/docker-login) to log in to a private container registry such as [Azure Container registry](https://azure.microsoft.com/services/container-registry/).
+* Workflow samples for various **runtime** environments are given at https://github.com/Azure/actions-workflow-samples/tree/master/AppService.
+* In the workflow file: change `app-name` to your Web app name.
 
-Once login is done, the next set of Actions in the workflow can perform tasks such as building, tagging and pushing containers.
-  
-## Create Azure Web App and deploy using GitHub Actions
 
-Note: Workflow samples with sample application code and deployment procedure for various **runtime** environments are given at https://github.com/Azure/actions-workflow-samples/tree/master/AppService.
-
-0. Review the pre-requisites outlined in the ["Dependencies on Other Github Actions"](https://github.com/Azure/webapps-deploy#dependencies-on-other-github-actions) section above.
-1. Create a web app in Azure using app service. Follow the tutorial [Azure Web Apps Quickstart](https://docs.microsoft.com/azure/app-service/overview#next-steps).
-2. Pick a template from the following table depends on your Azure web app **runtime** and place the template to `.github/workflows/` in your project repository.
-3. Change `app-name` to your Web app name created in the first step.
-4. Commit and push your project to GitHub repository, you should see a new GitHub Action initiated in **Actions** tab.
-
-Webapps deploy Actions is supported for the Azure public cloud. Before running this action, login to the Azure Cloud using [Azure Login](https://github.com/Azure/login) by setting appropriate value for the `environment` parameter.
-
-### Configure deployment credentials:
+## Configure deployment credentials
 
 For any credentials like Publish Profile, add them as [secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets) in the GitHub repository and then use them in the workflow.
 
 Follow the steps to configure the secret:
 
-* **Note: As of October 2020, Linux web apps will need the app setting `WEBSITE_WEBDEPLOY_USE_SCM` set to `true` before continuing with next step of downloading the publish profile. This requirement will be removed in the future.**
-* Download the publish profile for the WebApp from the portal (Get Publish profile option)
-* If deploying to slot, download the publish profile for slot. Also specify the `slot-name` field with the name of the slot.
-* Define a new secret under your repository settings, Add secret menu
+* *Note: As of October 2020, Linux web apps will need the app setting `WEBSITE_WEBDEPLOY_USE_SCM` set to `true` before continuing with next step of downloading the publish profile.*
+* Download the publish profile for the WebApp from the portal ("Get Publish profile")
+* Define a new secret under your repository settings -> "Add secret"
 * Paste the contents for the downloaded publish profile file into the secret's value field
-* Now in the workflow file in your branch: `.github/workflows/workflow.yml` replace the secret for the input `publish-profile:` of the deploy Azure WebApp action (Refer to the example above)
+* In the workflow file: fill in the field `publish-profile:` with your secret.
 
 This project welcomes contributions and suggestions.
