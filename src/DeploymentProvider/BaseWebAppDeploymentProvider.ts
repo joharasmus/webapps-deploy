@@ -1,16 +1,15 @@
 import * as core from '@actions/core';
 
-import { PublishProfile, ScmCredentials } from '../Utilities/PublishProfile';
+import { PublishProfile } from '../PublishProfile';
 
 import { ActionParameters } from '../actionparameters';
 import { AzureAppService } from 'azure-actions-appservice-rest/Arm/azure-app-service';
 import { AzureAppServiceUtility } from 'azure-actions-appservice-rest/Utilities/AzureAppServiceUtility';
-import { IWebAppDeploymentProvider } from './IWebAppDeploymentProvider';
 import { Kudu } from 'azure-actions-appservice-rest/Kudu/azure-app-kudu-service';
 import { KuduServiceUtility } from 'azure-actions-appservice-rest/Utilities/KuduServiceUtility';
 import { addAnnotation } from 'azure-actions-appservice-rest/Utilities/AnnotationUtility';
 
-export abstract class BaseWebAppDeploymentProvider implements IWebAppDeploymentProvider {
+export abstract class BaseWebAppDeploymentProvider {
     protected actionParams:ActionParameters;
     protected appService: AzureAppService;
     protected kuduService: Kudu;
