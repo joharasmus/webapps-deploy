@@ -8,9 +8,9 @@ This repository contains GitHub Action for Azure WebApp to deploy to an Azure We
 
 You can also use this GitHub Action to deploy your customized image into an Azure WebApps container.
 
-For deploying container images to Kubernetes, consider using [Kubernetes deploy](https://github.com/Azure/k8s-deploy) action. This action requires that the cluster context be set earlier in the workflow by using either the [Azure/aks-set-context](https://github.com/Azure/aks-set-context/tree/releases/v1) action or the [Azure/k8s-set-context](https://github.com/Azure/k8s-set-context/tree/releases/v1) action.
+For deploying container images to Kubernetes, consider using [Kubernetes deploy](https://github.com/Azure/k8s-deploy) action.
 
-The definition of this GitHub Action is in [action.yml](https://github.com/joharasmus/webapps-deploy/blob/master/action.yml). *startup-command* is applicable only for Linux apps and not for Windows apps. Currently *startup-command* is supported only for Linux apps when SPN is provided and not when publish profile is provided.
+The definition of this GitHub Action is in [action.yml](https://github.com/joharasmus/webapps-deploy/blob/master/action.yml).
 
 # End-to-End Sample Workflows
 
@@ -55,9 +55,7 @@ For example, if You want to deploy a Java WAR based app, You can follow the link
 | Java | [java_jar.yml](https://github.com/Azure/actions-workflow-samples/tree/master/AppService/java-jar-webapp-on-azure.yml) |
 | Java      | [java_war.yml](https://github.com/Azure/actions-workflow-samples/tree/master/AppService/java-war-webapp-on-azure.yml) |
 | Python     | [python.yml](https://github.com/Azure/actions-workflow-samples/tree/master/AppService/python-webapp-on-azure.yml) |
-| PHP        | [php.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/php-webapp-on-azure.yml)
 | DOCKER     | [docker.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/docker-webapp-container-on-azure.yml) |
-| GO     | [go.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/go-webapp-on-azure.yml) |
 
 ### Sample workflow to build and deploy a Node.js Web app to Azure using publish profile
 
