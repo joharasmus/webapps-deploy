@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsc",
+    "build": "./node_modules/typescript/bin/tsc",
     "test": "jest"
   },
   "license": "MIT",
