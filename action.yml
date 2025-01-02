@@ -41,9 +41,6 @@ inputs:
 outputs:
   webapp-url:
     description: 'URL to work with your webapp'
-branding:
-  icon: 'webapp.svg'
-  color: 'blue'
 runs:
   using: 'node20'
   main: 'lib/main.js'
