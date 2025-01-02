@@ -1,7 +1,6 @@
 import * as core from "@actions/core";
 import {main} from "../src/main";
 import { AuthorizerFactory } from "azure-actions-webclient/AuthorizerFactory";
-import { ValidatorFactory } from '../src/ActionInputValidator/ValidatorFactory';
 import { DeploymentProviderFactory } from '../src/DeploymentProvider/DeploymentProviderFactory';
 import { ActionParameters} from "../src/actionparameters";
 import { PublishProfileWebAppValidator } from '../src/ActionInputValidator/ActionValidators/PublishProfileWebAppValidator';
@@ -35,7 +34,6 @@ describe('Test azure-webapps-deploy', () => {
         }
             return '';
         });
-        let getValidatorFactorySpy = jest.spyOn(ValidatorFactory, 'getValidator').mockImplementation(async _type => new PublishProfileWebAppValidator());
         let ValidatorFactoryValidateSpy = jest.spyOn(PublishProfileWebAppValidator.prototype, 'validate');
         let getDeploymentProviderSpy = jest.spyOn(DeploymentProviderFactory, 'getDeploymentProvider').mockImplementation(type => new WebAppDeploymentProvider(type));
         let deployWebAppStepSpy = jest.spyOn(WebAppDeploymentProvider.prototype, 'DeployWebAppStep');
@@ -51,7 +49,6 @@ describe('Test azure-webapps-deploy', () => {
         expect(getAuthorizerSpy).not.toHaveBeenCalled(); // When publish profile is given as input getAuthorizer is not called
         expect(getActionParamsSpy).toHaveBeenCalledTimes(1);
         expect(getInputSpy).toHaveBeenCalledTimes(1);
-        expect(getValidatorFactorySpy).toHaveBeenCalledTimes(1);
         expect(ValidatorFactoryValidateSpy).toHaveBeenCalledTimes(1);
         expect(getDeploymentProviderSpy).toHaveBeenCalledTimes(1);
         expect(deployWebAppStepSpy).toHaveBeenCalled();

@@ -6,7 +6,7 @@ import { IAuthorizer } from 'azure-actions-webclient/Authorizer/IAuthorizer';
 import { ActionParameters } from "./actionparameters";
 import { DEPLOYMENT_PROVIDER_TYPES } from "./DeploymentProvider/Providers/BaseWebAppDeploymentProvider";
 import { DeploymentProviderFactory } from './DeploymentProvider/DeploymentProviderFactory';
-import { ValidatorFactory } from './ActionInputValidator/ValidatorFactory';
+import { PublishProfileWebAppValidator } from './ActionInputValidator/ActionValidators/PublishProfileWebAppValidator';
 
 export async function main() {
   let isDeploymentSuccess: boolean = true;
@@ -19,7 +19,7 @@ export async function main() {
     let type = DEPLOYMENT_PROVIDER_TYPES.PUBLISHPROFILE;
 
     // Validate action inputs
-    let validator = await ValidatorFactory.getValidator(type);
+    let validator = new PublishProfileWebAppValidator();
     await validator.validate();
 
     var deploymentProvider = DeploymentProviderFactory.getDeploymentProvider(type);
