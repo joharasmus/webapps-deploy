@@ -82,6 +82,5 @@ export class WebAppDeploymentProvider extends BaseWebAppDeploymentProvider {
         }
         
         console.log('App Service Application URL: ' + this.applicationURL);
-        core.setOutput('webapp-url', this.applicationURL);
     }
 }

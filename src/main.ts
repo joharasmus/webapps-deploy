@@ -4,9 +4,9 @@ import { AuthorizerFactory } from "azure-actions-webclient/AuthorizerFactory";
 import { IAuthorizer } from 'azure-actions-webclient/Authorizer/IAuthorizer';
 
 import { ActionParameters } from "./actionparameters";
-import { DEPLOYMENT_PROVIDER_TYPES } from "./DeploymentProvider/BaseWebAppDeploymentProvider";
-import { PublishProfileWebAppValidator } from './InputValidator/PublishProfileWebAppValidator';
-import { WebAppDeploymentProvider } from './DeploymentProvider/WebAppDeploymentProvider';
+import { DEPLOYMENT_PROVIDER_TYPES } from "./BaseWebAppDeploymentProvider";
+import { PublishProfileWebAppValidator } from './PublishProfileWebAppValidator';
+import { WebAppDeploymentProvider } from './WebAppDeploymentProvider';
 
 export async function main() {
   let isDeploymentSuccess: boolean = true;

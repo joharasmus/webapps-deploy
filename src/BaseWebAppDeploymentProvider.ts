@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
 
-import { PublishProfile } from '../PublishProfile';
+import { ActionParameters } from './actionparameters';
+import { PublishProfile } from './PublishProfile';
 
-import { ActionParameters } from '../actionparameters';
 import { AzureAppService } from 'azure-actions-appservice-rest/Arm/azure-app-service';
 import { AzureAppServiceUtility } from 'azure-actions-appservice-rest/Utilities/AzureAppServiceUtility';
 import { Kudu } from 'azure-actions-appservice-rest/Kudu/azure-app-kudu-service';
@@ -53,7 +53,6 @@ export abstract class BaseWebAppDeploymentProvider {
         }
         
         console.log('App Service Application URL: ' + this.applicationURL);
-        core.setOutput('webapp-url', this.applicationURL);
     }
 
     private async initializeForSPN() {        

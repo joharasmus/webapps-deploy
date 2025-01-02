@@ -30,7 +30,6 @@ export class ActionParameters {
     private _endpoint: IAuthorizer;
     private _publishProfileContent: string;
     private _slotName: string;
-    private _multiContainerConfigFile?: string;
     private _startupCommand: string;
     private _isMultiContainer: boolean;
     private _isLinux: boolean;
@@ -48,7 +47,6 @@ export class ActionParameters {
         this._slotName = core.getInput('slot-name');
         this._packageInput = core.getInput('package');
         this._images = core.getInput('images');
-        this._multiContainerConfigFile = core.getInput('configuration-file');
         this._startupCommand = core.getInput('startup-command');
         this._resourceGroupName = core.getInput('resource-group-name');
         /**
@@ -149,10 +147,6 @@ export class ActionParameters {
 
     public get startupCommand() {
         return this._startupCommand;
-    }
-
-    public get multiContainerConfigFile() {
-        return this._multiContainerConfigFile;
     }
 
     public get type() {
