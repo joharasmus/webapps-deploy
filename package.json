@@ -1,7 +1,6 @@
 {
-  "name": "webapps-deploy",
+  "name": "webapps-deploy-dotnet",
   "version": "1.0.0",
-  "description": "Deploy web apps and containerized web apps to Azure",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -11,11 +10,6 @@
     "type": "git",
     "url": "git+https://github.com/joharasmus/webapps-deploy.git"
   },
-  "keywords": [
-    "action",
-    "webapp",
-    "container"
-  ],
   "license": "MIT",
   "homepage": "https://github.com/joharasmus/webapps-deploy",
   "devDependencies": {
