@@ -2,8 +2,6 @@
 
 With the Azure App Service Actions for GitHub, you can automate your workflow to deploy [Azure Web Apps](https://azure.microsoft.com/services/app-service/web/) or [Azure Web Apps for Containers](https://azure.microsoft.com/services/app-service/containers/) using GitHub Actions.
 
-Get started today with a [free Azure account](https://azure.com/free/open-source).
-
 This repository contains GitHub Action for Azure WebApp to deploy to an Azure WebApp (Windows or Linux). The action supports deploying a folder, *\*.jar*, *\*.war*, and \**.zip* files (except msBuild generated packages).
 
 You can also use this GitHub Action to deploy your customized image into an Azure WebApps container.
@@ -29,7 +27,6 @@ The definition of this GitHub Action is in [action.yml](https://github.com/johar
 * To build app code in a specific language based environment, use setup actions:
   * [Setup DotNet](https://github.com/actions/setup-dotnet) Sets up a dotnet environment by optionally downloading and caching a version of dotnet by SDK version and adding to PATH.
   * [Setup Node](https://github.com/actions/setup-node) sets up a node environment by optionally downloading and caching a version of node - npm by version spec and add to PATH
-  * [Setup Python](https://github.com/actions/setup-python) sets up Python environment by optionally installing a version of python and adding to PATH.
   * [Setup Java](https://github.com/actions/setup-java) sets up Java app environment optionally downloading and caching a version of java by version and adding to PATH. Downloads from [Azul's Zulu distribution](http://static.azul.com/zulu/bin/).
 
 * To build and deploy a containerized app, use [docker-login](https://github.com/Azure/docker-login) to log in to a private container registry such as [Azure Container registry](https://azure.microsoft.com/services/container-registry/).
@@ -48,80 +45,9 @@ For example, if You want to deploy a Java WAR based app, You can follow the link
 3. Change `app-name` to your Web app name created in the first step.
 4. Commit and push your project to GitHub repository, you should see a new GitHub Action initiated in **Actions** tab.
 
-|  Runtime | Template |
-|------------|---------|
-| DotNet     | [dotnet.yml](https://github.com/Azure/actions-workflow-samples/tree/master/AppService/asp.net-core-webapp-on-azure.yml) |
-| Node       | [node.yml](https://github.com/Azure/actions-workflow-samples/tree/master/AppService/node.js-webapp-on-azure.yml) |
-| Java | [java_jar.yml](https://github.com/Azure/actions-workflow-samples/tree/master/AppService/java-jar-webapp-on-azure.yml) |
-| Java      | [java_war.yml](https://github.com/Azure/actions-workflow-samples/tree/master/AppService/java-war-webapp-on-azure.yml) |
-| Python     | [python.yml](https://github.com/Azure/actions-workflow-samples/tree/master/AppService/python-webapp-on-azure.yml) |
-| DOCKER     | [docker.yml](https://github.com/Azure/actions-workflow-samples/blob/master/AppService/docker-webapp-container-on-azure.yml) |
+See https://github.com/Azure/actions-workflow-samples/tree/master/AppService/ for templates for different languages/runtimes.
 
-### Sample workflow to build and deploy a Node.js Web app to Azure using publish profile
-
-```yaml
-# File: .github/workflows/workflow.yml
-
-on: push
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-    # checkout the repo
-    - name: 'Checkout Github Action' 
-      uses: actions/checkout@master
-
-    - name: Setup Node 10.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: '10.x'
-    - name: 'npm install, build, and test'
-      run: |
-        npm install
-        npm run build --if-present
-        npm run test --if-present
-
-    - name: 'Run Azure webapp deploy action using publish profile credentials'
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: node-rn
-        publish-profile: ${{ secrets.azureWebAppPublishProfile }}
-
-```
-
-### Sample workflow to build and deploy a Node.js app to Containerized WebApp using publish profile
-
-```yaml
-on: [push]
-
-name: Linux_Container_Node_Workflow
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-    # checkout the repo
-    - name: 'Checkout Github Action'
-      uses: actions/checkout@master
-
-    - uses: azure/docker-login@v1
-      with:
-        login-server: contoso.azurecr.io
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
-
-    - run: |
-        docker build . -t contoso.azurecr.io/nodejssampleapp:${{ github.sha }}
-        docker push contoso.azurecr.io/nodejssampleapp:${{ github.sha }} 
-
-    - uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'node-rnc'
-        publish-profile: ${{ secrets.azureWebAppPublishProfile }}
-        images: 'contoso.azurecr.io/nodejssampleapp:${{ github.sha }}'
-```
-Webapps deploy Actions is supported for the Azure public cloud as well as Azure government clouds ('AzureUSGovernment' or 'AzureChinaCloud') and Azure Stack ('AzureStack') Hub. Before running this action, login to the respective Azure Cloud  using [Azure Login](https://github.com/Azure/login) by setting appropriate value for the `environment` parameter.
+Webapps deploy Actions is supported for the Azure public cloud. Before running this action, login to the Azure Cloud using [Azure Login](https://github.com/Azure/login) by setting appropriate value for the `environment` parameter.
 
 #### Configure deployment credentials:
 
