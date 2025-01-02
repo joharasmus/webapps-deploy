@@ -10,8 +10,6 @@ For deploying container images to Kubernetes, consider using [Kubernetes deploy]
 
 The definition of this GitHub Action is in [action.yml](https://github.com/joharasmus/webapps-deploy/blob/master/action.yml).
 
-# End-to-End Sample Workflows
-
 ## Dependencies on other GitHub Actions
 
 * [Checkout](https://github.com/actions/checkout) your Git repository content into GitHub Actions agent.
@@ -37,29 +35,23 @@ Once login is done, the next set of Actions in the workflow can perform tasks su
 
 Note: Workflow samples with sample application code and deployment procedure for various **runtime** environments are given at https://github.com/Azure/actions-workflow-samples/tree/master/AppService.
 
-For example, if You want to deploy a Java WAR based app, You can follow the link https://github.com/Azure-Samples/Java-application-petstore-ee7 in the sample workflow templates.
-
 0. Review the pre-requisites outlined in the ["Dependencies on Other Github Actions"](https://github.com/Azure/webapps-deploy#dependencies-on-other-github-actions) section above.
 1. Create a web app in Azure using app service. Follow the tutorial [Azure Web Apps Quickstart](https://docs.microsoft.com/azure/app-service/overview#next-steps).
 2. Pick a template from the following table depends on your Azure web app **runtime** and place the template to `.github/workflows/` in your project repository.
 3. Change `app-name` to your Web app name created in the first step.
 4. Commit and push your project to GitHub repository, you should see a new GitHub Action initiated in **Actions** tab.
 
-See https://github.com/Azure/actions-workflow-samples/tree/master/AppService/ for templates for different languages/runtimes.
-
 Webapps deploy Actions is supported for the Azure public cloud. Before running this action, login to the Azure Cloud using [Azure Login](https://github.com/Azure/login) by setting appropriate value for the `environment` parameter.
 
-#### Configure deployment credentials:
+### Configure deployment credentials:
 
-For any credentials like Azure Service Principal, Publish Profile etc add them as [secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets) in the GitHub repository and then use them in the workflow.
-
-The above example uses app-level credentials i.e., publish profile file for deployment. 
+For any credentials like Publish Profile, add them as [secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets) in the GitHub repository and then use them in the workflow.
 
 Follow the steps to configure the secret:
 
 * **Note: As of October 2020, Linux web apps will need the app setting `WEBSITE_WEBDEPLOY_USE_SCM` set to `true` before continuing with next step of downloading the publish profile. This requirement will be removed in the future.**
 * Download the publish profile for the WebApp from the portal (Get Publish profile option)
-* While deploying to slot, download the publish profile for slot. Also specify the `slot-name` field with the name of the slot.
+* If deploying to slot, download the publish profile for slot. Also specify the `slot-name` field with the name of the slot.
 * Define a new secret under your repository settings, Add secret menu
 * Paste the contents for the downloaded publish profile file into the secret's value field
 * Now in the workflow file in your branch: `.github/workflows/workflow.yml` replace the secret for the input `publish-profile:` of the deploy Azure WebApp action (Refer to the example above)
