@@ -9,19 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Azure/webapps-deploy.git"
+    "url": "git+https://github.com/joharasmus/webapps-deploy.git"
   },
   "keywords": [
     "action",
     "webapp",
     "container"
   ],
-  "author": "Sumiran Aggarwal",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Azure/webapps-deploy/issues"
-  },
-  "homepage": "https://github.com/Azure/webapps-deploy#readme",
+  "homepage": "https://github.com/joharasmus/webapps-deploy",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.2",
