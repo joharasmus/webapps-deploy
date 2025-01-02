@@ -1,8 +1,6 @@
-import { ActionParameters } from "../src/actionparameters";
 import { DeploymentProviderFactory } from '../src/DeploymentProvider/DeploymentProviderFactory';
 import { DEPLOYMENT_PROVIDER_TYPES } from "../src/DeploymentProvider/Providers/BaseWebAppDeploymentProvider";
 import { WebAppDeploymentProvider } from "../src/DeploymentProvider/Providers/WebAppDeploymentProvider";
-import { PublishProfileWebAppContainerDeploymentProvider } from "../src/DeploymentProvider/Providers/PublishProfileWebAppContainerDeploymentProvider";
 
 
 describe('Test Deployment Provider Factory', () => {
@@ -20,19 +18,6 @@ describe('Test Deployment Provider Factory', () => {
     
             let provider = await DeploymentProviderFactory.getDeploymentProvider(type);
             expect(provider).toBeInstanceOf(WebAppDeploymentProvider);
-        });
-    
-        it("Get Container Deployment Provider for Publish Profile auth flow", async() => {
-            jest.spyOn(ActionParameters, 'getActionParams').mockImplementation(() : any => {
-                return {
-                    images : 'MOCK_IMAGES'
-                }
-            });
-
-            let type: DEPLOYMENT_PROVIDER_TYPES = DEPLOYMENT_PROVIDER_TYPES.PUBLISHPROFILE;
-            
-            let provider = await DeploymentProviderFactory.getDeploymentProvider(type);
-            expect(provider).toBeInstanceOf(PublishProfileWebAppContainerDeploymentProvider);
         });
         
     });

@@ -1,26 +1,17 @@
 import * as core from '@actions/core';
-import * as crypto from "crypto";
-
-import { ActionParameters } from "./actionparameters";
 
 import { AuthorizerFactory } from "azure-actions-webclient/AuthorizerFactory";
+import { IAuthorizer } from 'azure-actions-webclient/Authorizer/IAuthorizer';
+
+import { ActionParameters } from "./actionparameters";
 import { DEPLOYMENT_PROVIDER_TYPES } from "./DeploymentProvider/Providers/BaseWebAppDeploymentProvider";
 import { DeploymentProviderFactory } from './DeploymentProvider/DeploymentProviderFactory';
-import { IAuthorizer } from 'azure-actions-webclient/Authorizer/IAuthorizer';
 import { ValidatorFactory } from './ActionInputValidator/ValidatorFactory';
-
-var prefix = !!process.env.AZURE_HTTP_USER_AGENT ? `${process.env.AZURE_HTTP_USER_AGENT}` : "";
 
 export async function main() {
   let isDeploymentSuccess: boolean = true;
 
   try {
-    // Set user agent variable
-    let usrAgentRepo = crypto.createHash('sha256').update(`${process.env.GITHUB_REPOSITORY}`).digest('hex');
-    let actionName = 'DeployWebAppToAzure';
-    let userAgentString = (!!prefix ? `${prefix}+` : '') + `GITHUBACTIONS_${actionName}_${usrAgentRepo}`;
-    //core.exportVariable('AZURE_HTTP_USER_AGENT', userAgentString);
-
     // Initialize action inputs
     let endpoint: IAuthorizer = !!core.getInput('publish-profile') ? null : await AuthorizerFactory.getAuthorizer();
     ActionParameters.getActionParams(endpoint);
@@ -54,9 +45,6 @@ export async function main() {
       if(deploymentProvider != null) {
           await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
       }
-
-      // Reset AZURE_HTTP_USER_AGENT
-      core.exportVariable('AZURE_HTTP_USER_AGENT', prefix);
 
       core.debug(isDeploymentSuccess ? "Deployment Succeeded" : "Deployment failed");
   }
