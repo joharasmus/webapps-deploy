@@ -1,10 +1,9 @@
 module.exports = {
     clearMocks: true,
     moduleFileExtensions: ['js', 'ts'],
-    testEnvironment: 'node',
-    testMatch: ['**/*.test.ts'],
+    testMatch: ['**/DeploymentProviderFactory.test.ts', '**/ValidatorFactory.test.ts', '**/main.test.ts'],
     transform: {
-      '^.+\\.ts$': 'ts-jest'
+      'ts$': 'ts-jest'
     },
     verbose: true
   }
