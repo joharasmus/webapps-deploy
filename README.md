@@ -232,37 +232,4 @@ The following steps describe how to create the service principal, assign the rol
 
 NOTE: to manage service principals created with `az ad sp create-for-rbac`, visit the [Azure portal](https://portal.azure.com), navigate to your Azure Active Directory, then select **Manage** > **App registrations** on the left-hand menu. Your service principal should appear in the list. Select a principal to navigate to its properties. You can also manage role assignments using the [az role assignment](https://docs.microsoft.com/cli/azure/role/assignment?view=azure-cli-latest) command.
 
-#### Configure web app private registry credentials
-
-This sample assumes the `node-rnc` web application has been previously configured to authenticate against the private registry. If you wish to set private registry authentication settings on the workflow, you can either use:
-
-* The command [az webapp config container](https://docs.microsoft.com/cli/azure/webapp/config/container?view=azure-cli-latest#az-webapp-config-container-set) to configure the registry url, username and password.
-
-* Setup the authentication settings using [azure/appservice-settings action](https://github.com/Azure/appservice-settings), like this for example
-
-```yaml
-    - name: Set Web App ACR authentication
-      uses: Azure/appservice-settings@v1
-      with:
-       app-name: 'node-rnc'
-       app-settings-json: |
-         [
-             {
-                 "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
-                 "value": "${{ secrets.REGISTRY_PASSWORD }}",
-                 "slotSetting": false
-             },
-             {
-                 "name": "DOCKER_REGISTRY_SERVER_URL",
-                 "value": "https://contoso.azurecr.io",
-                 "slotSetting": false
-             },
-             {
-                 "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-                 "value": "${{ secrets.REGISTRY_USERNAME  }}",
-                 "slotSetting": false
-             }
-         ]
-```
-
 This project welcomes contributions and suggestions.
