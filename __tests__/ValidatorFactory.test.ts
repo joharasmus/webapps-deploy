@@ -1,14 +1,14 @@
-import { ActionParameters } from "../../src/actionparameters";
+import { ActionParameters } from "../src/actionparameters";
 import { AzureResourceFilterUtility } from "azure-actions-appservice-rest/Utilities/AzureResourceFilterUtility";
-import { ValidatorFactory } from '../../src/ActionInputValidator/ValidatorFactory';
-import { DEPLOYMENT_PROVIDER_TYPES } from "../../src/DeploymentProvider/Providers/BaseWebAppDeploymentProvider";
-import { PublishProfileContainerWebAppValidator } from "../../src/ActionInputValidator/ActionValidators/PublishProfileContainerWebAppValidator";
-import { PublishProfileWebAppValidator } from "../../src/ActionInputValidator/ActionValidators/PublishProfileWebAppValidator";
-import { SpnLinuxContainerWebAppValidator } from "../../src/ActionInputValidator/ActionValidators/SpnLinuxContainerWebAppValidator";
-import { SpnLinuxWebAppValidator } from "../../src/ActionInputValidator/ActionValidators/SpnLinuxWebAppValidator";
-import { SpnWindowsContainerWebAppValidator } from "../../src/ActionInputValidator/ActionValidators/SpnWindowsContainerWebAppValidator";
-import { SpnWindowsWebAppValidator } from "../../src/ActionInputValidator/ActionValidators/SpnWindowsWebAppValidator";
-import { PublishProfile } from "../../src/Utilities/PublishProfile";
+import { ValidatorFactory } from '../src/ActionInputValidator/ValidatorFactory';
+import { DEPLOYMENT_PROVIDER_TYPES } from "../src/DeploymentProvider/Providers/BaseWebAppDeploymentProvider";
+import { PublishProfileContainerWebAppValidator } from "../src/ActionInputValidator/ActionValidators/PublishProfileContainerWebAppValidator";
+import { PublishProfileWebAppValidator } from "../src/ActionInputValidator/ActionValidators/PublishProfileWebAppValidator";
+import { SpnLinuxContainerWebAppValidator } from "../src/ActionInputValidator/ActionValidators/SpnLinuxContainerWebAppValidator";
+import { SpnLinuxWebAppValidator } from "../src/ActionInputValidator/ActionValidators/SpnLinuxWebAppValidator";
+import { SpnWindowsContainerWebAppValidator } from "../src/ActionInputValidator/ActionValidators/SpnWindowsContainerWebAppValidator";
+import { SpnWindowsWebAppValidator } from "../src/ActionInputValidator/ActionValidators/SpnWindowsWebAppValidator";
+import { PublishProfile } from "../src/Utilities/PublishProfile";
 
 describe('Test Validator Factory', () => {
 

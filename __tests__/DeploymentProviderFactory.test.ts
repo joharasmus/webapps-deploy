@@ -1,9 +1,9 @@
-import { ActionParameters } from "../../src/actionparameters";
-import { DeploymentProviderFactory } from '../../src/DeploymentProvider/DeploymentProviderFactory';
-import { DEPLOYMENT_PROVIDER_TYPES } from "../../src/DeploymentProvider/Providers/BaseWebAppDeploymentProvider";
-import { WebAppContainerDeploymentProvider } from "../../src/DeploymentProvider/Providers/WebAppContainerDeployment";
-import { WebAppDeploymentProvider } from "../../src/DeploymentProvider/Providers/WebAppDeploymentProvider";
-import { PublishProfileWebAppContainerDeploymentProvider } from "../../src/DeploymentProvider/Providers/PublishProfileWebAppContainerDeploymentProvider";
+import { ActionParameters } from "../src/actionparameters";
+import { DeploymentProviderFactory } from '../src/DeploymentProvider/DeploymentProviderFactory';
+import { DEPLOYMENT_PROVIDER_TYPES } from "../src/DeploymentProvider/Providers/BaseWebAppDeploymentProvider";
+import { WebAppContainerDeploymentProvider } from "../src/DeploymentProvider/Providers/WebAppContainerDeployment";
+import { WebAppDeploymentProvider } from "../src/DeploymentProvider/Providers/WebAppDeploymentProvider";
+import { PublishProfileWebAppContainerDeploymentProvider } from "../src/DeploymentProvider/Providers/PublishProfileWebAppContainerDeploymentProvider";
 
 
 describe('Test Deployment Provider Factory', () => {
