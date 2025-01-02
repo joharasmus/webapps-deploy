@@ -4,9 +4,9 @@ import { AuthorizerFactory } from "azure-actions-webclient/AuthorizerFactory";
 import { IAuthorizer } from 'azure-actions-webclient/Authorizer/IAuthorizer';
 
 import { ActionParameters } from "./actionparameters";
-import { DEPLOYMENT_PROVIDER_TYPES } from "./DeploymentProvider/Providers/BaseWebAppDeploymentProvider";
-import { DeploymentProviderFactory } from './DeploymentProvider/DeploymentProviderFactory';
+import { DEPLOYMENT_PROVIDER_TYPES } from "./DeploymentProvider/BaseWebAppDeploymentProvider";
 import { PublishProfileWebAppValidator } from './ActionInputValidator/ActionValidators/PublishProfileWebAppValidator';
+import { WebAppDeploymentProvider } from './DeploymentProvider/WebAppDeploymentProvider';
 
 export async function main() {
   let isDeploymentSuccess: boolean = true;
@@ -22,7 +22,7 @@ export async function main() {
     let validator = new PublishProfileWebAppValidator();
     await validator.validate();
 
-    var deploymentProvider = DeploymentProviderFactory.getDeploymentProvider(type);
+    var deploymentProvider = new WebAppDeploymentProvider(type);
 
     core.debug("Predeployment Step Started");
     await deploymentProvider.PreDeploymentStep();

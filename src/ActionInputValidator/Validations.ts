@@ -2,7 +2,6 @@ import * as core from '@actions/core';
 
 import { Package, exist } from "azure-actions-utility/packageUtility";
 import { PublishProfile, ScmCredentials } from "../Utilities/PublishProfile";
-import RuntimeConstants from '../RuntimeConstants';
 import { ActionParameters } from "../actionparameters";
 
 import fs = require('fs');

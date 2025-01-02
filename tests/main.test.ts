@@ -1,16 +1,15 @@
 import * as core from "@actions/core";
 import {main} from "../src/main";
 import { AuthorizerFactory } from "azure-actions-webclient/AuthorizerFactory";
-import { DeploymentProviderFactory } from '../src/DeploymentProvider/DeploymentProviderFactory';
 import { ActionParameters} from "../src/actionparameters";
 import { PublishProfileWebAppValidator } from '../src/ActionInputValidator/ActionValidators/PublishProfileWebAppValidator';
-import { WebAppDeploymentProvider } from '../src/DeploymentProvider/Providers/WebAppDeploymentProvider';
+import { WebAppDeploymentProvider } from '../src/DeploymentProvider/WebAppDeploymentProvider';
 
 jest.mock('@actions/core');
 jest.mock('../src/actionparameters');
 jest.mock('azure-actions-webclient/AuthorizerFactory');
 jest.mock('../src/ActionInputValidator/ActionValidators/PublishProfileWebAppValidator');
-jest.mock('../src/DeploymentProvider/Providers/WebAppDeploymentProvider');
+jest.mock('../src/DeploymentProvider/WebAppDeploymentProvider');
 
 describe('Test azure-webapps-deploy', () => {
 
@@ -35,7 +34,6 @@ describe('Test azure-webapps-deploy', () => {
             return '';
         });
         let ValidatorFactoryValidateSpy = jest.spyOn(PublishProfileWebAppValidator.prototype, 'validate');
-        let getDeploymentProviderSpy = jest.spyOn(DeploymentProviderFactory, 'getDeploymentProvider').mockImplementation(type => new WebAppDeploymentProvider(type));
         let deployWebAppStepSpy = jest.spyOn(WebAppDeploymentProvider.prototype, 'DeployWebAppStep');
         let updateDeploymentStatusSpy = jest.spyOn(WebAppDeploymentProvider.prototype, 'UpdateDeploymentStatus');
 
@@ -50,7 +48,6 @@ describe('Test azure-webapps-deploy', () => {
         expect(getActionParamsSpy).toHaveBeenCalledTimes(1);
         expect(getInputSpy).toHaveBeenCalledTimes(1);
         expect(ValidatorFactoryValidateSpy).toHaveBeenCalledTimes(1);
-        expect(getDeploymentProviderSpy).toHaveBeenCalledTimes(1);
         expect(deployWebAppStepSpy).toHaveBeenCalled();
         expect(updateDeploymentStatusSpy).toHaveBeenCalled();
     });
