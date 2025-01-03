@@ -7,7 +7,7 @@ import { Package } from 'azure-actions-utility/packageUtility';
 export async function main() {
   try {
     // Initialize action inputs
-    let actionParams = ActionParameters.getActionParams(null);
+    let actionParams = ActionParameters.getActionParams();
     actionParams.package = new Package(actionParams.packageInput);
     
     var deploymentProvider = new WebAppDeployer(actionParams);

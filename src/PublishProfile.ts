@@ -11,7 +11,6 @@ export interface ScmCredentials {
 
 export class PublishProfile {
     private _creds: ScmCredentials;
-    private _appUrl: string;
     private _kuduService: any;
     private static _publishProfile: PublishProfile;
 
@@ -23,7 +22,7 @@ export class PublishProfile {
                 username: secrets.getSecret("//publishProfile/@userName", true),
                 password: secrets.getSecret("//publishProfile/@userPWD", true)
             };
-            this._appUrl = secrets.getSecret("//publishProfile/@destinationAppUrl", false);
+
             if(this._creds.uri.indexOf("scm") < 0) {
                 throw new Error("Publish profile does not contain kudu URL");
             }
@@ -40,14 +39,6 @@ export class PublishProfile {
             this._publishProfile = new PublishProfile(publishProfileContent);
         }
         return this._publishProfile;
-    }
-
-    public get creds(): ScmCredentials {
-        return this._creds;
-    }
-
-    public get appUrl(): string {
-        return this._appUrl;
     }
 
     public get kuduService() {
