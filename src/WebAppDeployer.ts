@@ -6,7 +6,7 @@ import { AzureAppService } from 'azure-actions-appservice-rest/Arm/azure-app-ser
 import { Kudu } from 'azure-actions-appservice-rest/Kudu/azure-app-kudu-service';
 import { KuduServiceUtility } from 'azure-actions-appservice-rest/Utilities/KuduServiceUtility';
 import { Package } from "azure-actions-utility/packageUtility";
-import { PublishProfile } from './PublishProfile';
+import { SecretParser, FormatType } from 'actions-secret-parser';
 
 export class WebAppDeployer {
 
@@ -20,9 +20,8 @@ export class WebAppDeployer {
     }
 
     public async DeployWebApp() {
-        const publishProfile = new PublishProfile(this.actionParams.publishProfileContent);
         
-        this.kuduService = publishProfile.kuduService;
+        this.MakeKudu(this.actionParams.publishProfileContent);
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
 
         let appPackage: Package = this.actionParams.package;
@@ -35,5 +34,15 @@ export class WebAppDeployer {
 
         await this.kuduServiceUtility.deployUsingOneDeploy(webPackage, { slotName: "production", commitMessage:"" }, 
             "", "zip", "true", "true");
+    }
+
+    public MakeKudu(publishProfileContent: string) {
+        let secrets = new SecretParser(publishProfileContent, FormatType.XML);
+        let uri = secrets.getSecret("//publishProfile/@publishUrl", false);
+        uri = `https://${uri}`;
+        let username = secrets.getSecret("//publishProfile/@userName", true);
+        let password = secrets.getSecret("//publishProfile/@userPWD", true);
+    
+        this.kuduService = new Kudu(uri, { username: username, password: password });
     }
 }
