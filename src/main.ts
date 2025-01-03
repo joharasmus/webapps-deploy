@@ -22,7 +22,7 @@ export async function main() {
     var deploymentProvider = new WebAppDeploymentProvider();
 
     core.debug("Predeployment Step Started");
-    await deploymentProvider.PreDeploymentStep();
+    await deploymentProvider.initializeForPublishProfile();
 
     core.debug("Deployment Step Started");
     await deploymentProvider.DeployWebAppStep();

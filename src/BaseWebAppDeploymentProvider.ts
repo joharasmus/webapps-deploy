@@ -23,10 +23,6 @@ export abstract class BaseWebAppDeploymentProvider {
         this.actionParams = ActionParameters.getActionParams();
     }
 
-    public async PreDeploymentStep() {
-        await this.initializeForPublishProfile();
-    }
-
     abstract DeployWebAppStep(): void;
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
@@ -44,7 +40,7 @@ export abstract class BaseWebAppDeploymentProvider {
         console.log('App Service Application URL: ' + this.applicationURL);
     }
 
-    private async initializeForPublishProfile() {
+    public async initializeForPublishProfile() {
         const publishProfile: PublishProfile = PublishProfile.getPublishProfile(this.actionParams.publishProfileContent);
         
         this.kuduService = publishProfile.kuduService;

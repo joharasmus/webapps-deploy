@@ -13,8 +13,6 @@ export class WebAppDeploymentProvider extends BaseWebAppDeploymentProvider {
         let appPackage: Package = this.actionParams.package;
         let webPackage = appPackage.getPath();
 
-        const validTypes = ["zip", "static"];
-
         // kudu warm up
         await this.kuduServiceUtility.warmpUp(); 
 
