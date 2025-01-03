@@ -21,9 +21,9 @@ export function validateAppDetails() {
 
     if (!!actionParams.appName) {
         let creds: ScmCredentials = PublishProfile.getPublishProfile(actionParams.publishProfileContent).creds;
-        //in publishsettings file username starts with $
+        //in publishsettings username starts with $
         let splitUsername: string[] = creds.username.toUpperCase().substring(1).split("__");
-        let appNameMatch: boolean = !actionParams.appName || actionParams.appName.toUpperCase() === splitUsername[0];
+        let appNameMatch: boolean = !actionParams.appName;
         if (!appNameMatch) {
             throw new Error("Publish profile is invalid for app-name. Provide correct publish profile credentials for app.");
         }

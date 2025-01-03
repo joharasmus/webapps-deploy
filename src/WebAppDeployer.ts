@@ -1,4 +1,3 @@
-import * as core from '@actions/core';
 import * as utility from 'azure-actions-utility/utility.js';
 import * as zipUtility from 'azure-actions-utility/ziputility.js';
 
@@ -35,8 +34,6 @@ export class WebAppDeployer {
 
         let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
         webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
-        core.debug("Compressed folder into zip " +  webPackage);
-        core.debug("Initiated deployment via kudu service for webapp package : "+ webPackage);
 
         this.deploymentID = await this.kuduServiceUtility.deployUsingOneDeploy(webPackage, { slotName: "production", commitMessage:"" }, 
             "", "zip", "true", "true");
@@ -46,8 +43,6 @@ export class WebAppDeployer {
         if(!!this.appService) {
             await addAnnotation(this.actionParams.endpoint, this.appService, isDeploymentSuccess);
         }
-        
-        console.log('App Service Application URL: ' + this.applicationURL);
     }
 
     public async initializeForPublishProfile() {
