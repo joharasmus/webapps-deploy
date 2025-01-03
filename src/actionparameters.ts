@@ -12,9 +12,6 @@ export class ActionParameters {
     private _publishProfileContent: string;
     private _commitMessage: string;
 
-    // Used only for OneDeploy
-    private _type: string = "";
-
     private constructor(endpoint: IAuthorizer) {
         this._publishProfileContent = core.getInput('publish-profile');
         this._appName = core.getInput('app-name');
@@ -59,13 +56,5 @@ export class ActionParameters {
 
     public get publishProfileContent() {
         return this._publishProfileContent;
-    }
-
-    public get type() {
-        return this._type;
-    }
-
-    public set type(type:string) {
-        this._type = type;
     }
 }

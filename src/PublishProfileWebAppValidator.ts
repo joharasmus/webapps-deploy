@@ -7,8 +7,6 @@ export class PublishProfileWebAppValidator {
     
     async validate(): Promise<void> {
 
-        let actionParams: ActionParameters = ActionParameters.getActionParams();
-
         validateAppDetails();
 
         await validatePackageInput();
