@@ -3,7 +3,7 @@ import { ActionParameters } from "./actionparameters";
 import { ScmCredentials, PublishProfile } from "./PublishProfile";
 import { Package } from "azure-actions-utility/packageUtility";
 
-export class PublishProfileWebAppValidator {
+export class WebAppValidator {
     
     async validate(): Promise<void> {
 

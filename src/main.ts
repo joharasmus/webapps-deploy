@@ -1,29 +1,23 @@
 import * as core from '@actions/core';
 
-import { IAuthorizer } from 'azure-actions-webclient/Authorizer/IAuthorizer';
-
 import { ActionParameters } from "./actionparameters";
-import { PublishProfileWebAppValidator } from './PublishProfileWebAppValidator';
-import { WebAppDeploymentProvider } from './WebAppDeploymentProvider';
+import { WebAppValidator } from './WebAppValidator';
+import { WebAppDeployer } from './WebAppDeployer';
 
 export async function main() {
   let isDeploymentSuccess: boolean = true;
 
   try {
     // Initialize action inputs
-    let endpoint: IAuthorizer = null;
-    ActionParameters.getActionParams(endpoint);
+    ActionParameters.getActionParams(null);
 
     // Validate action inputs
-    let validator = new PublishProfileWebAppValidator();
+    let validator = new WebAppValidator();
     await validator.validate();
     
-    var deploymentProvider = new WebAppDeploymentProvider();
+    var deploymentProvider = new WebAppDeployer();
 
-    core.debug("Predeployment Step Started");
     await deploymentProvider.initializeForPublishProfile();
-
-    core.debug("Deployment Step Started");
     await deploymentProvider.DeployWebAppStep();
   }
   catch(error) {
@@ -32,8 +26,6 @@ export async function main() {
   }
   finally {
       await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
-
-      core.debug(isDeploymentSuccess ? "Deployment Succeeded" : "Deployment failed");
   }
 }
 
