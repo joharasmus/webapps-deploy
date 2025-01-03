@@ -33,7 +33,7 @@ export class ActionParameters {
     private _commitMessage: string;
 
     // Used only for OneDeploy
-    private _type: string;
+    private _type: string = "";
 
     private constructor(endpoint: IAuthorizer) {
         this._publishProfileContent = core.getInput('publish-profile');
@@ -45,9 +45,6 @@ export class ActionParameters {
          */
         this._commitMessage = github.context.eventName === 'push' ? github.context.payload.head_commit.message.slice(0, 1000) : "";
         this._endpoint = endpoint;
-
-        // Used only for OneDeploy
-        this._type = "";
     }
 
     public static getActionParams(endpoint?: IAuthorizer) {
@@ -122,7 +119,7 @@ export class ActionParameters {
     }
 
     public get type() {
-        return "";
+        return this._type;
     }
 
     public set type(type:string) {
