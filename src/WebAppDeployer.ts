@@ -20,7 +20,7 @@ export class WebAppDeployer {
     }
 
     public async DeployWebApp() {
-        const publishProfile: PublishProfile = PublishProfile.getPublishProfile(this.actionParams.publishProfileContent);
+        const publishProfile = new PublishProfile(this.actionParams.publishProfileContent);
         
         this.kuduService = publishProfile.kuduService;
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
