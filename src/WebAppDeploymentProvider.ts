@@ -41,23 +41,6 @@ export class WebAppDeploymentProvider extends BaseWebAppDeploymentProvider {
 
         this.deploymentID = await this.kuduServiceUtility.deployUsingOneDeploy(webPackage, { slotName: "production", commitMessage:this.actionParams.commitMessage }, 
             "", this.actionParams.type, "true", "true");
-
-        // updating startup command
-        if(!!this.actionParams.startupCommand) {
-            await this.updateStartupCommand();
-        }
-    }
-
-    private async updateStartupCommand() {
-        let currentConfig = await this.appService.getConfiguration();
-        let currentStartupCommand = currentConfig.properties.appCommandLine;
-        let newStartupCommand = this.actionParams.startupCommand;
-        if(currentStartupCommand != newStartupCommand) {
-            await this.appServiceUtility.updateConfigurationSettings({ appCommandLine: newStartupCommand});
-        }
-        else {
-            core.debug(`Skipped updating appCommandLine. Current value is: ${currentStartupCommand}`);
-        }
     }
 
     public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {

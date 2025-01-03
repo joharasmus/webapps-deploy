@@ -27,7 +27,6 @@ export class ActionParameters {
     private _realKind: string;
     private _endpoint: IAuthorizer;
     private _publishProfileContent: string;
-    private _startupCommand: string;
     private _isMultiContainer: boolean;
     private _isLinux: boolean;
     private _commitMessage: string;
@@ -39,7 +38,6 @@ export class ActionParameters {
         this._publishProfileContent = core.getInput('publish-profile');
         this._appName = core.getInput('app-name');
         this._packageInput = core.getInput('package');
-        this._startupCommand = core.getInput('startup-command');
         /**
          * Trimming the commit message because it is used as a param in uri of deployment api. And sometimes, it exceeds the max length of http URI.
          */
@@ -112,10 +110,6 @@ export class ActionParameters {
 
     public set isLinux(isLin: boolean) {
         this._isLinux = isLin;
-    }
-
-    public get startupCommand() {
-        return this._startupCommand;
     }
 
     public get type() {

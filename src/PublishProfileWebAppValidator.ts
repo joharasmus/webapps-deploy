@@ -11,8 +11,6 @@ export class PublishProfileWebAppValidator {
 
         validateAppDetails();
 
-        startupCommandNotAllowed(actionParams.startupCommand);
-
         await validatePackageInput();
     }
     
@@ -32,14 +30,6 @@ export function validateAppDetails() {
         if (!appNameMatch) {
             throw new Error("Publish profile is invalid for app-name. Provide correct publish profile credentials for app.");
         }
-    }
-}
-
-// Error is startup command is provided
-
-export function startupCommandNotAllowed(startupCommand: string) {
-    if (!!startupCommand) {
-        throw new Error("startup-command is not a valid input for Windows web app or with publish-profile auth scheme.");
     }
 }
 
