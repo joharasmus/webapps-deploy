@@ -15,7 +15,7 @@ export abstract class BaseWebAppDeploymentProvider {
     protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
     protected kuduServiceUtility: KuduServiceUtility;
-    protected activeDeploymentID; 
+    protected activeDeploymentID: string; 
     protected applicationURL: string;
     protected deploymentID: string;
 

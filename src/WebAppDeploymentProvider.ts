@@ -27,11 +27,6 @@ export class WebAppDeploymentProvider extends BaseWebAppDeploymentProvider {
                 core.debug("Initiated deployment via kudu service for webapp package : "+ webPackage);
                 this.actionParams.type = "zip";
                 break;
-                
-            case PackageType.zip:
-                core.debug("Initiated deployment via kudu service for webapp zip package : "+ webPackage);
-                this.actionParams.type = "zip";
-                break;
 
             default:
                 throw new Error('Invalid App Service package: ' + webPackage + ' or type provided: ' + this.actionParams.type);
