@@ -8,31 +8,12 @@ inputs:
   publish-profile:
     description: 'Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets'
     required: false
-  slot-name:
-    description: 'Enter an existing Slot other than the Production slot'
-    required: false
-    default: 'production'
   package:
-    description: 'Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy'
+    description: 'Applies to Web App only: Path to package or folder. *.zip, or a folder to deploy'
     required: false
     default: '.'
-  images:
-    description: "Applies to Web App Containers only: Specify the fully qualified container image(s) name. For example, 'myregistry.azurecr.io/nginx:latest' or 'python:3.7.2-alpine/'. For multi-container scenario multiple container image names can be provided (multi-line separated)"
-    required: false
-  resource-group-name:
-    description: 'Enter the resource group name of the web app'
-    required: false
   type:
-    description: 'Enter deployment type (JAR, WAR, EAR, ZIP, Static)'
-    required: false
-  target-path:
-    description: "Target path in the web app. For ex. '/home/site/wwwroot'"
-    required: false
-  clean:
-    description: 'Delete existing files target directory before deploying'
-    required: false
-  restart:
-    description: 'Restart the app service after deployment'
+    description: 'Enter deployment type (ZIP, Static)'
     required: false
 
 runs:

@@ -1,6 +1,6 @@
 # Deployment of Azure Web Apps
 
-This repository contains a GitHub Action for deployment to an Azure WebApp (Windows or Linux). The action supports deploying a folder, *\*.jar*, *\*.war*, or \**.zip* files (except msBuild generated packages).
+This repository contains a GitHub Action for deployment to an Azure WebApp (Windows or Linux). The action supports deploying a folder or \**.zip* files (except msBuild generated packages).
 
 You can also use this GitHub Action to deploy a customized image into an Azure WebApps container.
 

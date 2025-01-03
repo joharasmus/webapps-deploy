@@ -26,16 +26,7 @@ export abstract class BaseWebAppDeploymentProvider {
     }
 
     public async PreDeploymentStep() {
-        switch(this.authType) {
-            case DEPLOYMENT_PROVIDER_TYPES.SPN:
-                await this.initializeForSPN();
-                break;
-            case DEPLOYMENT_PROVIDER_TYPES.PUBLISHPROFILE:
-                await this.initializeForPublishProfile();
-                break;
-            default: 
-                throw new Error("Invalid deployment provider type");
-        }
+        await this.initializeForPublishProfile();
     }
 
     abstract DeployWebAppStep(): void;
@@ -45,7 +36,7 @@ export abstract class BaseWebAppDeploymentProvider {
             await addAnnotation(this.actionParams.endpoint, this.appService, isDeploymentSuccess);
         }
         
-        this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: this.actionParams.slotName});
+        this.activeDeploymentID = await this.kuduServiceUtility.updateDeploymentStatus(isDeploymentSuccess, null, {'type': 'Deployment', slotName: "production"});
         core.debug('Active DeploymentId :'+ this.activeDeploymentID);
 
         if(!!isDeploymentSuccess && !!this.deploymentID && !!this.activeDeploymentID) {
@@ -53,16 +44,6 @@ export abstract class BaseWebAppDeploymentProvider {
         }
         
         console.log('App Service Application URL: ' + this.applicationURL);
-    }
-
-    private async initializeForSPN() {        
-        this.appService = new AzureAppService(this.actionParams.endpoint, this.actionParams.resourceGroupName, this.actionParams.appName, this.actionParams.slotName);
-        this.appServiceUtility = new AzureAppServiceUtility(this.appService);
-        
-        this.kuduService = await this.appServiceUtility.getKuduService();
-        this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
-
-        this.applicationURL = await this.appServiceUtility.getApplicationURL();
     }
 
     private async initializeForPublishProfile() {

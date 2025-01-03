@@ -23,13 +23,10 @@ export class ActionParameters {
     private _appName: string;
     private _packageInput: string;
     private _package: Package;
-    private _images: string;
-    private _resourceGroupName?: string;
     private _kind: WebAppKind;
     private _realKind: string;
     private _endpoint: IAuthorizer;
     private _publishProfileContent: string;
-    private _slotName: string;
     private _startupCommand: string;
     private _isMultiContainer: boolean;
     private _isLinux: boolean;
@@ -37,18 +34,12 @@ export class ActionParameters {
 
     // Used only for OneDeploy
     private _type: string;
-    private _targetPath: string;
-    private _clean: string;
-    private _restart: string;
 
     private constructor(endpoint: IAuthorizer) {
         this._publishProfileContent = core.getInput('publish-profile');
         this._appName = core.getInput('app-name');
-        this._slotName = core.getInput('slot-name');
         this._packageInput = core.getInput('package');
-        this._images = core.getInput('images');
         this._startupCommand = core.getInput('startup-command');
-        this._resourceGroupName = core.getInput('resource-group-name');
         /**
          * Trimming the commit message because it is used as a param in uri of deployment api. And sometimes, it exceeds the max length of http URI.
          */
@@ -57,9 +48,6 @@ export class ActionParameters {
 
         // Used only for OneDeploy
         this._type = core.getInput('type');
-        this._targetPath = core.getInput('target-path');
-        this._clean = core.getInput('clean');
-        this._restart = core.getInput('restart');
     }
 
     public static getActionParams(endpoint?: IAuthorizer) {
@@ -89,18 +77,6 @@ export class ActionParameters {
         this._package = appPackage;
     }
 
-    public get images() {
-        return this._images;
-    }
-
-    public get resourceGroupName() {
-        return this._resourceGroupName;
-    }
-
-    public set resourceGroupName(rg: string) {
-        this._resourceGroupName = rg;
-    }
-
     public get kind() {
         return this._kind;
     }
@@ -123,10 +99,6 @@ export class ActionParameters {
 
     public get publishProfileContent() {
         return this._publishProfileContent;
-    }
-
-    public get slotName() {
-        return this._slotName;
     }
 
     public get isMultiContainer() {
@@ -155,17 +127,5 @@ export class ActionParameters {
 
     public set type(type:string) {
         this._type = type;
-    }
-
-    public get targetPath() {
-        return this._targetPath;
-    }
-
-    public get clean() {
-        return this._clean;
-    }
-
-    public get restart() {
-        return this._restart;
     }
 }
