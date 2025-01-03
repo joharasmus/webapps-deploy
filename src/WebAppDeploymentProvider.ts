@@ -26,13 +26,18 @@ export class WebAppDeploymentProvider extends BaseWebAppDeploymentProvider {
         else {
             // Retains the old behavior of determining the package type from the file extension if valid type is not defined
             let packageType = appPackage.getPackageType();
-            switch(packageType){ 
+            switch(packageType){
                     
                 case PackageType.folder:
                     let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
                     webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
                     core.debug("Compressed folder into zip " +  webPackage);
                     core.debug("Initiated deployment via kudu service for webapp package : "+ webPackage);
+                    this.actionParams.type = "zip";
+                    break;
+                    
+                case PackageType.zip:
+                    core.debug("Initiated deployment via kudu service for webapp zip package : "+ webPackage);
                     this.actionParams.type = "zip";
                     break;
     
