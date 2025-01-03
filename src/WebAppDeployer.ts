@@ -1,7 +1,6 @@
 import * as utility from 'azure-actions-utility/utility.js';
 import * as zipUtility from 'azure-actions-utility/ziputility.js';
 
-import { addAnnotation } from 'azure-actions-appservice-rest/Utilities/AnnotationUtility';
 import { ActionParameters } from './actionparameters';
 import { AzureAppService } from 'azure-actions-appservice-rest/Arm/azure-app-service';
 import { Kudu } from 'azure-actions-appservice-rest/Kudu/azure-app-kudu-service';
@@ -32,10 +31,6 @@ export class WebAppDeployer {
 
         await this.kuduServiceUtility.deployUsingOneDeploy(webPackage, { slotName: "production", commitMessage:"" }, 
             "", "zip", "true", "true");
-    }
-
-    public async UpdateDeploymentStatus(isDeploymentSuccess: boolean) {
-        await addAnnotation(this.actionParams.endpoint, this.appService, isDeploymentSuccess);
     }
 
     public async initializeForPublishProfile() {

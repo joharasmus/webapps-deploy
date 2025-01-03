@@ -21,9 +21,6 @@ export async function main() {
     isDeploymentSuccess = false;
     core.setFailed("Deployment Failed, " + error);
   }
-  finally {
-      await deploymentProvider.UpdateDeploymentStatus(isDeploymentSuccess);
-  }
 }
 
 main();
