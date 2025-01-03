@@ -15,13 +15,11 @@ export abstract class BaseWebAppDeploymentProvider {
     protected kuduService: Kudu;
     protected appServiceUtility: AzureAppServiceUtility;
     protected kuduServiceUtility: KuduServiceUtility;
-    protected activeDeploymentID;
-    protected authType: DEPLOYMENT_PROVIDER_TYPES;    
+    protected activeDeploymentID; 
     protected applicationURL: string;
     protected deploymentID: string;
 
-    constructor(type: DEPLOYMENT_PROVIDER_TYPES) {
-        this.authType = type;
+    constructor() {
         this.actionParams = ActionParameters.getActionParams();
     }
 
@@ -54,9 +52,4 @@ export abstract class BaseWebAppDeploymentProvider {
         
         this.applicationURL = publishProfile.appUrl;
     }
-}
-
-export enum DEPLOYMENT_PROVIDER_TYPES {
-    SPN,
-    PUBLISHPROFILE
 }

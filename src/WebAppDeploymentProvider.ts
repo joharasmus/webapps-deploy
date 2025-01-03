@@ -13,7 +13,7 @@ export class WebAppDeploymentProvider extends BaseWebAppDeploymentProvider {
         let appPackage: Package = this.actionParams.package;
         let webPackage = appPackage.getPath();
 
-        const validTypes = ["war", "jar", "ear", "zip", "static"];
+        const validTypes = ["zip", "static"];
 
         // kudu warm up
         await this.kuduServiceUtility.warmpUp(); 
@@ -27,15 +27,6 @@ export class WebAppDeploymentProvider extends BaseWebAppDeploymentProvider {
             // Retains the old behavior of determining the package type from the file extension if valid type is not defined
             let packageType = appPackage.getPackageType();
             switch(packageType){
-                case PackageType.war:
-                    core.debug("Initiated deployment via kudu service for webapp war package : "+ webPackage);
-                    this.actionParams.type = "war";
-                    break;
-    
-                case PackageType.jar:
-                    core.debug("Initiated deployment via kudu service for webapp jar package : "+ webPackage);
-                    this.actionParams.type = "jar";
-                    break;
     
                 case PackageType.folder:
                     let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);

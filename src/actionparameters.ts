@@ -47,7 +47,7 @@ export class ActionParameters {
         this._endpoint = endpoint;
 
         // Used only for OneDeploy
-        this._type = core.getInput('type');
+        this._type = "";
     }
 
     public static getActionParams(endpoint?: IAuthorizer) {
@@ -122,7 +122,7 @@ export class ActionParameters {
     }
 
     public get type() {
-        return this._type;
+        return "";
     }
 
     public set type(type:string) {

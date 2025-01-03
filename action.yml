@@ -12,9 +12,6 @@ inputs:
     description: 'Applies to Web App only: Path to package or folder. *.zip, or a folder to deploy'
     required: false
     default: '.'
-  type:
-    description: 'Enter deployment type (ZIP, Static)'
-    required: false
 
 runs:
   using: 'node20'
