@@ -4,7 +4,6 @@ import { Package } from 'azure-actions-utility/packageUtility';
 
 export class ActionParameters {
     private static actionparams: ActionParameters;
-    private _appName: string;
     private _packageInput: string;
     private _package: Package;
     private _endpoint: IAuthorizer;
@@ -12,7 +11,6 @@ export class ActionParameters {
 
     private constructor(endpoint: IAuthorizer) {
         this._publishProfileContent = core.getInput('publish-profile');
-        this._appName = core.getInput('app-name');
         this._packageInput = core.getInput('package');
         this._endpoint = endpoint;
     }
@@ -22,10 +20,6 @@ export class ActionParameters {
             this.actionparams = new ActionParameters(!!endpoint ? endpoint : null);
         }
         return this.actionparams;
-    }
-    
-    public get appName() {
-        return this._appName;
     }
 
     public get packageInput() {
