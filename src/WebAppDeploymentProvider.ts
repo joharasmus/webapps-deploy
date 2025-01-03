@@ -28,8 +28,11 @@ export class WebAppDeploymentProvider extends BaseWebAppDeploymentProvider {
             let packageType = appPackage.getPackageType();
             switch(packageType){ 
                     
-                case PackageType.zip:
-                    core.debug("Initiated deployment via kudu service for webapp zip package : "+ webPackage);
+                case PackageType.folder:
+                    let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
+                    webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
+                    core.debug("Compressed folder into zip " +  webPackage);
+                    core.debug("Initiated deployment via kudu service for webapp package : "+ webPackage);
                     this.actionParams.type = "zip";
                     break;
     
