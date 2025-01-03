@@ -11,7 +11,6 @@ export class WebAppValidator {
 
         await validatePackageInput();
     }
-    
 }
 
 // Cross-validate provided app name is same as that in publish profile
@@ -22,8 +21,8 @@ export function validateAppDetails() {
 
     if (!!actionParams.appName) {
         let creds: ScmCredentials = PublishProfile.getPublishProfile(actionParams.publishProfileContent).creds;
-        //for kubeapps in publishsettings file username doesn't start with $, for all other apps it starts with $
-        let splitUsername: string[] = creds.username.startsWith("$") ? creds.username.toUpperCase().substring(1).split("__") : creds.username.toUpperCase().split("__");
+        //in publishsettings file username starts with $
+        let splitUsername: string[] = creds.username.toUpperCase().substring(1).split("__");
         let appNameMatch: boolean = !actionParams.appName || actionParams.appName.toUpperCase() === splitUsername[0];
         if (!appNameMatch) {
             throw new Error("Publish profile is invalid for app-name. Provide correct publish profile credentials for app.");

@@ -38,7 +38,7 @@ export class WebAppDeployer {
         core.debug("Compressed folder into zip " +  webPackage);
         core.debug("Initiated deployment via kudu service for webapp package : "+ webPackage);
 
-        this.deploymentID = await this.kuduServiceUtility.deployUsingOneDeploy(webPackage, { slotName: "production", commitMessage:this.actionParams.commitMessage }, 
+        this.deploymentID = await this.kuduServiceUtility.deployUsingOneDeploy(webPackage, { slotName: "production", commitMessage:"" }, 
             "", "zip", "true", "true");
     }
 

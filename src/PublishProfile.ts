@@ -30,7 +30,7 @@ export class PublishProfile {
             this._creds.uri = `https://${this._creds.uri}`;
             this._kuduService = new Kudu(this._creds.uri, {username: this._creds.username, password: this._creds.password});
         } catch(error) {
-            core.error("Failed to fetch credentials from Publish Profile. For more details on how to set publish profile credentials refer https://aka.ms/create-secrets-for-GitHub-workflows");
+            core.error("Failed to fetch credentials from Publish Profile.");
             throw error;
         }
     }
