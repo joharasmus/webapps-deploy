@@ -11,38 +11,29 @@ export async function main() {
   try {
     let publishProfileContent = core.getInput('publish-profile');
     let packageInput = core.getInput('package');
+    
     let appPackage = new Package(packageInput);
     
-    await WebAppDeployer.DeployWebApp(publishProfileContent, appPackage);
-  }
-  catch(error) {
-    core.setFailed("Deployment Failed, " + error);
-  }
-}
-
-export class WebAppDeployer {
-  
-  public static async DeployWebApp(publishProfileContent: string, appPackage: Package) {
-    
     let secrets = new SecretParser(publishProfileContent, FormatType.XML);
-
+    
     let uri = secrets.getSecret("//publishProfile/@publishUrl", false);
     uri = `https://${uri}`;
     let username = secrets.getSecret("//publishProfile/@userName", true);
     let password = secrets.getSecret("//publishProfile/@userPWD", true);
     
-    let kuduService = new Kudu(uri, { username: username, password: password });
+    let kuduService = new Kudu(uri, { username, password });
     let kuduServiceUtility = new KuduServiceUtility(kuduService);
-    
-    let webPackage = appPackage.getPath();
-    
     await kuduServiceUtility.warmpUp();
-    
+
+    let webPackage = appPackage.getPath();
     let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
     webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
     
     await kuduServiceUtility.deployUsingOneDeploy(webPackage, { slotName: "production", commitMessage: "" },
       "", "zip", "true", "true");
+  }
+  catch(error) {
+    core.setFailed("Deployment Failed, " + error);
   }
 }
   
