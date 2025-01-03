@@ -1,19 +1,16 @@
 import * as core from '@actions/core';
 
 import { ActionParameters } from "./actionparameters";
-import { WebAppValidator } from './WebAppValidator';
 import { WebAppDeployer } from './WebAppDeployer';
+import { Package } from 'azure-actions-utility/packageUtility';
 
 export async function main() {
   let isDeploymentSuccess: boolean = true;
 
   try {
     // Initialize action inputs
-    ActionParameters.getActionParams(null);
-
-    // Validate action inputs
-    let validator = new WebAppValidator();
-    await validator.validate();
+    let actionParams = ActionParameters.getActionParams(null);
+    actionParams.package = new Package(actionParams.packageInput);
     
     var deploymentProvider = new WebAppDeployer();
 

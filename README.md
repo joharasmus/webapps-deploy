@@ -15,6 +15,7 @@ This project welcomes contributions and suggestions.
 * Enable [Run from Package](https://docs.microsoft.com/en-us/azure/app-service/deploy-run-package#enable-running-from-package), otherwise remote build will take time and the deployment will take longer. 
 * Use a setup action to install build tools in a specific language based environment (.NET/Java/Python etc.).
 * To build and deploy a containerized app, use [docker-login](https://github.com/Azure/docker-login) to log in to a private container registry such as [Azure Container registry](https://azure.microsoft.com/services/container-registry/).
+* Deployment of msBuild generated package is not supported.
 * Workflow samples for various **runtime** environments are given at https://github.com/Azure/actions-workflow-samples/tree/master/AppService.
 * In the workflow file: change `app-name` to your Web app name.
 
