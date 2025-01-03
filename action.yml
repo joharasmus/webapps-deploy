@@ -4,7 +4,7 @@ description: 'Deploy Web Apps/Containerized Web Apps to Azure. github.com/Azure/
 inputs: 
   app-name:
     description: 'Name of the Azure Web App'
-    required: true
+    required: false
   publish-profile:
     description: 'Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets'
     required: false
