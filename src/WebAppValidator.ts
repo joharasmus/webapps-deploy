@@ -1,32 +1,11 @@
 
 import { ActionParameters } from "./actionparameters";
-import { ScmCredentials, PublishProfile } from "./PublishProfile";
 import { Package } from "azure-actions-utility/packageUtility";
 
 export class WebAppValidator {
     
     async validate(): Promise<void> {
-
-        validateAppDetails();
-
         await validatePackageInput();
-    }
-}
-
-// Cross-validate provided app name is same as that in publish profile
-
-export function validateAppDetails() {
-
-    let actionParams: ActionParameters = ActionParameters.getActionParams();
-
-    if (!!actionParams.appName) {
-        let creds: ScmCredentials = PublishProfile.getPublishProfile(actionParams.publishProfileContent).creds;
-        //in publishsettings username starts with $
-        let splitUsername: string[] = creds.username.toUpperCase().substring(1).split("__");
-        let appNameMatch: boolean = !actionParams.appName;
-        if (!appNameMatch) {
-            throw new Error("Publish profile is invalid for app-name. Provide correct publish profile credentials for app.");
-        }
     }
 }
 
