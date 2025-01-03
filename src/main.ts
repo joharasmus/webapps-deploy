@@ -1,14 +1,15 @@
 import * as core from '@actions/core';
 
-import { ActionParameters } from "./actionparameters";
 import { WebAppDeployer } from './WebAppDeployer';
+import { Package } from 'azure-actions-utility/packageUtility';
 
 export async function main() {
   try {
-    // Initialize action inputs
-    let actionParams = new ActionParameters();
+    let publishProfileContent = core.getInput('publish-profile');
+    let packageInput = core.getInput('package');
+    let appPackage = new Package(packageInput);
     
-    var deploymentProvider = new WebAppDeployer(actionParams);
+    let deploymentProvider = new WebAppDeployer(publishProfileContent, appPackage);
     await deploymentProvider.DeployWebApp();
   }
   catch(error) {

@@ -1,7 +1,6 @@
 import * as utility from 'azure-actions-utility/utility.js';
 import * as zipUtility from 'azure-actions-utility/ziputility.js';
 
-import { ActionParameters } from './actionparameters';
 import { AzureAppService } from 'azure-actions-appservice-rest/Arm/azure-app-service';
 import { Kudu } from 'azure-actions-appservice-rest/Kudu/azure-app-kudu-service';
 import { KuduServiceUtility } from 'azure-actions-appservice-rest/Utilities/KuduServiceUtility';
@@ -10,21 +9,23 @@ import { SecretParser, FormatType } from 'actions-secret-parser';
 
 export class WebAppDeployer {
 
-    protected actionParams: ActionParameters;
     protected appService: AzureAppService;
     protected kuduService: Kudu;
     protected kuduServiceUtility: KuduServiceUtility;
+    protected publishProfileContent: string;
+    protected appPackage: Package;
 
-    constructor(actionParams: ActionParameters) {
-        this.actionParams = actionParams;
+    constructor(publishProfileContent: string, appPackage: Package) {
+        this.publishProfileContent = publishProfileContent;
+        this.appPackage = appPackage;
     }
 
     public async DeployWebApp() {
         
-        this.MakeKudu(this.actionParams.publishProfileContent);
+        this.MakeKudu(this.publishProfileContent);
         this.kuduServiceUtility = new KuduServiceUtility(this.kuduService);
 
-        let appPackage: Package = this.actionParams.package;
+        let appPackage: Package = this.appPackage;
         let webPackage = appPackage.getPath();
 
         await this.kuduServiceUtility.warmpUp(); 
