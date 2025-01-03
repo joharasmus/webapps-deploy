@@ -1,6 +1,5 @@
 import * as core from '@actions/core';
 
-import { AuthorizerFactory } from "azure-actions-webclient/AuthorizerFactory";
 import { IAuthorizer } from 'azure-actions-webclient/Authorizer/IAuthorizer';
 
 import { ActionParameters } from "./actionparameters";
@@ -12,7 +11,7 @@ export async function main() {
 
   try {
     // Initialize action inputs
-    let endpoint: IAuthorizer = !!core.getInput('publish-profile') ? null : await AuthorizerFactory.getAuthorizer();
+    let endpoint: IAuthorizer = null;
     ActionParameters.getActionParams(endpoint);
 
     // Validate action inputs
