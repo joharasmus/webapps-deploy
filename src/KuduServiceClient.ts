@@ -1,5 +1,5 @@
 
-import { WebClient, WebRequest, WebRequestOptions, WebResponse } from 'azure-actions-webclient/WebClient';
+import { WebClient, WebRequest, WebResponse } from 'azure-actions-webclient/WebClient';
 
 
 export class KuduServiceClient {
@@ -16,8 +16,8 @@ export class KuduServiceClient {
         request.headers["Authorization"] = `Basic ${this._accessToken}`
         request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
 
-        let retryCount = 5;
-        
+        let retryCount = 3;
+
         while(retryCount >= 0) {
             try {
                 return await this._webClient.sendRequest(request);
