@@ -13,19 +13,6 @@ export class Kudu {
         this._client = new KuduServiceClient(scmUri, accessToken);
     }
 
-    // The below is for warming up kudu - is it really necessary? (RJ)
-    public async getAppSettings(): Promise<void> {
-        var httpRequest: WebRequest = {
-            method: 'GET',
-            uri: this._client.getRequestUri(`/api/settings`)
-        };
-
-        var response = await this._client.beginRequest(httpRequest);
-        
-        if(response.statusCode !== 200)
-            throw response;
-    }
-
     public async oneDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
         let httpRequest: WebRequest = {
             method: 'POST',
@@ -51,7 +38,7 @@ export class Kudu {
 
         while(true) {
             let response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode == 200 || response.statusCode == 202) {
+            if(response.statusCode == 200) {
                 var result = response.body;
 
                 if(result.status == 4 || result.status == 3) {
@@ -61,6 +48,13 @@ export class Kudu {
                     await new Promise(_ => setTimeout(_, 1000));
                     continue;
                 }
+            }
+            else if(response.statusCode == 202) {
+                var result = response.body;
+
+                if(result.status == 4 || result.status == 3) { }
+                await new Promise(_ => setTimeout(_, 1000));
+                continue;
             }
             else {
                 throw response;
