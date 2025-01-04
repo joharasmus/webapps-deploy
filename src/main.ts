@@ -1,17 +1,17 @@
 import * as core from '@actions/core';
 
 import { Package } from 'azure-actions-utility/packageUtility';
-import { SecretParser, FormatType } from 'actions-secret-parser';
 import { Kudu } from 'azure-actions-appservice-rest/Kudu/azure-app-kudu-service';
 import { KuduServiceUtility } from 'azure-actions-appservice-rest/Utilities/KuduServiceUtility';
 import * as utility from 'azure-actions-utility/utility';
 import * as zipUtility from 'azure-actions-utility/ziputility';
+import { FormatType, SecretParser } from './secretParser';
 
 export async function main() {
   try {
     let publishProfileContent = core.getInput('publish-profile');
     let packageInput = core.getInput('package');
-    
+
     let appPackage = new Package(packageInput);
     
     let secrets = new SecretParser(publishProfileContent, FormatType.XML);
