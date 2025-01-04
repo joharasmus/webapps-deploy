@@ -16,7 +16,7 @@ export class KuduServiceClient {
         request.headers["Authorization"] = `Basic ${this._accessToken}`
         request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
 
-        let retryCount = 2;
+        let retryCount = 1;
 
         while(retryCount >= 0) {
             try {
