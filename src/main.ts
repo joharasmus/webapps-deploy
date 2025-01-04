@@ -9,35 +9,18 @@ import { Kudu } from './Kudu';
 var xPathSelect = require('xpath').select;
 
 export async function deployUsingOneDeploy(packagePath: string, kuduService: Kudu): Promise<void> {
-  try {
-    console.log('Package deployment using OneDeploy initiated.');
-    
-    let queryParameters: Array<string> = [
-      'async=true',
-      'deployer=GITHUB_ONE_DEPLOY',
-      'type=zip',
-      'clean=true',
-      'restart=true'
-    ];
-    
-    let message = {
-    };
-    
-    let deploymentMessage = JSON.stringify(message);
-    
-    let deploymentDetails = await kuduService.oneDeploy(packagePath, queryParameters);
-    console.log(deploymentDetails);
-    
-    if (deploymentDetails.status == 3) {
-      throw 'Package deployment using ZIP Deploy failed. Refer logs for more details.';
-    }
-    
-    console.log('Successfully deployed web package to App Service.');
-  }
-  catch (error) {
-    core.error('Failed to deploy web package to App Service.');
-    throw error;
-  }
+  
+  let queryParameters: Array<string> = [
+    'async=true',
+    'deployer=GITHUB_ONE_DEPLOY',
+    'type=zip',
+    'clean=true',
+    'restart=true'
+  ];
+  
+  let deploymentDetails = await kuduService.oneDeploy(packagePath, queryParameters);
+  console.log(deploymentDetails);
+  
 }
 
 export async function main() {
