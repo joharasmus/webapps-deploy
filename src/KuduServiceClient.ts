@@ -69,8 +69,4 @@ export class KuduServiceClient {
 
         return this._scmUri + uriFormat;
     }
-
-    public getScmUri(): string {
-        return this._scmUri;
-    }
 }

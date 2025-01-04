@@ -1,14 +1,8 @@
 import { KUDU_DEPLOYMENT_CONSTANTS } from './Kudu';
 import { Kudu } from './Kudu';
-import * as fs from 'node:fs';
-import * as path from 'node:path'
 import * as core from '@actions/core';
 
-const deploymentFolder: string = 'site/deployments';
-const manifestFileName: string = 'manifest';
-const GITHUB_ZIP_DEPLOY: string = 'GITHUB_ZIP_DEPLOY';
 const GITHUB_ONE_DEPLOY: string = 'GITHUB_ONE_DEPLOY';
-const GITHUB_DEPLOY: string = 'GITHUB';
 
 export class KuduServiceUtility {
     private _webAppKuduService: Kudu;
@@ -35,73 +29,6 @@ export class KuduServiceUtility {
 
         var deploymentID: string = `${process.env.GITHUB_SHA}` + Date.now().toString();
         return deploymentID;
-    }
-
-    public async deployUsingZipDeploy(packagePath: string, customMessage?: any): Promise<string> {
-        try {
-            console.log('Package deployment using ZIP Deploy initiated.');
-
-            let queryParameters: Array<string> = [
-                'isAsync=true',
-                'deployer=' + GITHUB_ZIP_DEPLOY
-            ];
-            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
-            queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            let deploymentDetails = await this._webAppKuduService.zipDeploy(packagePath, queryParameters);
-            await this._processDeploymentResponse(deploymentDetails);
-
-            console.log('Successfully deployed web package to App Service.');
-            return deploymentDetails.id;
-        }
-        catch(error) {
-            core.error('Failed to deploy web package to App Service.');
-            throw error;
-        }
-    }
-
-    public async deployUsingRunFromZip(packagePath: string, customMessage?: any) : Promise<void> {
-        try {
-            console.log('Package deployment using ZIP Deploy initiated.');
-
-            let queryParameters: Array<string> = [
-                'deployer=' +  GITHUB_DEPLOY
-            ];
-
-            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
-            queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            await this._webAppKuduService.zipDeploy(packagePath, queryParameters);
-            console.log('Successfully deployed web package to App Service.');
-        }
-        catch(error) {
-            core.error('Failed to deploy web package to App Service.');
-            throw error;
-        }
-    }
-
-    public async deployUsingWarDeploy(packagePath: string, customMessage?: any, targetFolderName?: any): Promise<string> {
-        try {
-            console.log('Package deployment using WAR Deploy initiated.');
-
-            let queryParameters: Array<string> = [
-                'isAsync=true'
-            ];
-            
-            if(targetFolderName) {
-                queryParameters.push('name=' + encodeURIComponent(targetFolderName));
-            }
-
-            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
-            queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            let deploymentDetails = await this._webAppKuduService.warDeploy(packagePath, queryParameters);
-            await this._processDeploymentResponse(deploymentDetails);
-            console.log('Successfully deployed web package to App Service.');
-
-            return deploymentDetails.id;
-        }
-        catch(error) {
-            core.error('Failed to deploy web package to App Service.');
-            throw error;
-        }
     }
 
     public async deployUsingOneDeploy(packagePath: string, customMessage?: any, targetPath?: any, type?: any, clean?: any, restart?: any): Promise<string> {
@@ -143,23 +70,7 @@ export class KuduServiceUtility {
         }
     }
 
-    public async postZipDeployOperation(oldDeploymentID: string, activeDeploymentID: string): Promise<void> {
-        try {
-            core.debug(`ZIP DEPLOY - Performing post zip-deploy operation: ${oldDeploymentID} => ${activeDeploymentID}`);
-            let manifestFileContent = await this._webAppKuduService.getFileContent(`${deploymentFolder}/${oldDeploymentID}`, manifestFileName);
-            if(!!manifestFileContent) {
-                let tempManifestFile: string = path.join(`${process.env.RUNNER_TEMP}`, manifestFileName);
-                fs.writeFileSync(tempManifestFile, manifestFileContent);
-                await this._webAppKuduService.uploadFile(`${deploymentFolder}/${activeDeploymentID}`, manifestFileName, tempManifestFile);
-            }
-            core.debug('ZIP DEPLOY - Performed post-zipdeploy operation.');
-        }
-        catch(error) {
-            core.debug(`Failed to execute post zip-deploy operation: ${JSON.stringify(error)}.`);
-        }
-    }
-
-    public async warmpUp(): Promise<void> {
+    public async warmUp(): Promise<void> {
         try {
             core.debug('warming up Kudu Service');
             await this._webAppKuduService.getAppSettings();
@@ -237,24 +148,4 @@ export class KuduServiceUtility {
             deployer : 'GitHub'
         };
     }
-
-    public async deployWebAppImage(appName: string, images: string, isLinux: boolean) {
-        try {
-            core.debug(`DeployWebAppImage - appName: ${appName}; images: ${images}; isLinux:${isLinux}`);
-            console.log(`Deploying image ${images} to App Service ${appName}`);
-
-            if (!images) {
-                throw 'The container image to be deployed to App Service is empty.';
-            }
-
-            let headers = isLinux ? { 'LinuxFxVersion': `DOCKER|${images}` } : { 'WindowsFxVersion': `DOCKER|${images}` };
-            await this._webAppKuduService.imageDeploy(headers);
-            console.log('Successfully deployed image to App Service.');
-        }
-        catch(error) {
-            core.error('Failed to deploy image to Web app Container.');
-            throw error;
-        }
-    }
-
 }

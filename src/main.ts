@@ -29,7 +29,7 @@ export async function main() {
     
     let kuduService = new Kudu(uri, { username, password });
     let kuduServiceUtility = new KuduServiceUtility(kuduService);
-    await kuduServiceUtility.warmpUp();
+    await kuduServiceUtility.warmUp();
 
     let webPackage = appPackage.getPath();
     let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
