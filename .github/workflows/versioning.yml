@@ -1,0 +1,10 @@
+on: workflow_dispatch
+
+jobs:
+  renew_version:
+    name: 'Delete v2 and restore from last commit'
+    runs-on: ubuntu-24.04
+    steps:
+
+      - name: 'Delete last version, along with tag'
+        run: gh release delete v2 --cleanup-tag -y
