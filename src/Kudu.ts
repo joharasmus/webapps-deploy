@@ -39,20 +39,14 @@ export class Kudu {
         while(true) {
             let response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200) {
-                var result = response.body;
+                let result = response.body;
 
                 if(result.status == 4 || result.status == 3) {
                     return result;
                 }
-                else {
-                    await new Promise(_ => setTimeout(_, 1000));
-                    continue;
-                }
+                else { }
             }
             else if(response.statusCode == 202) {
-                var result = response.body;
-
-                if(result.status == 4 || result.status == 3) { }
                 await new Promise(_ => setTimeout(_, 1000));
                 continue;
             }
