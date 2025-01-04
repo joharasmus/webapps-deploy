@@ -65,7 +65,7 @@ export async function main() {
     core.setSecret(password);
     
     let kuduService = new Kudu(uri, username, password);
-    await kuduService.getAppSettings();
+    //await kuduService.getAppSettings();
 
     let webPackage = appPackage.getPath();
     let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
