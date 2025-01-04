@@ -1,6 +1,7 @@
-import core = require('@actions/core');
-import path = require('path');
-import * as fs from "fs";
+
+import * as core from '@actions/core';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 var shell = require('shelljs');
 var minimatch = require('minimatch');
 

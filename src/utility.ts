@@ -1,12 +1,12 @@
-import path = require('path');
 
-import * as os from "os";
+import * as core from '@actions/core';
+import * as os from 'node:os';
+import * as path from 'node:path';
+import * as zipUtility from './zipUtility';
 
 import { exist } from './packageUtility';
 import { find, match } from './utilityHelperFunctions';
 
-import zipUtility = require('./zipUtility');
-import core = require('@actions/core');
 
 export function findfiles(filepath){
 

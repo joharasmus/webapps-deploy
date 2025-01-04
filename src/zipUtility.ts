@@ -1,10 +1,10 @@
 
-import core = require('@actions/core');
-import io = require('@actions/io');
-import path = require('path');
-import Q = require('q');
-import fs = require('fs');
-import StreamZip = require('node-stream-zip');
+import * as core from '@actions/core';
+import * as fs from 'node:fs';
+import * as io from '@actions/io';
+import * as path from 'node:path';
+import * as Q from 'q';
+import * as StreamZip from 'node-stream-zip';
 var DecompressZip = require('decompress-zip');
 var archiver = require('archiver');
 

@@ -1,7 +1,7 @@
-import core = require('@actions/core');
-import fs = require('fs');
-import utility = require('./utility');
-import zipUtility = require('./zipUtility');
+import * as core from '@actions/core';
+import * as fs from 'node:fs';
+import * as utility from './utility';
+import * as zipUtility from './zipUtility';
 
 export enum PackageType {
     war,
