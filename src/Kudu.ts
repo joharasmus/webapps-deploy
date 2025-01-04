@@ -5,13 +5,13 @@ import { WebRequest } from 'azure-actions-webclient/WebClient';
 
 
 export class Kudu {
-    public static async oneDeploy(webPackage: string, queryParameters: Array<string>, scmUri: string, accessToken: string): Promise<any> {
+    public static async oneDeploy(webPackage: string, scmUri: string, accessToken: string): Promise<any> {
 
-        let client = new KuduServiceClient(scmUri, accessToken);
+        let client = new KuduServiceClient(accessToken);
 
         let httpRequest: WebRequest = {
             method: 'POST',
-            uri: client.getRequestUri(`/api/publish`, queryParameters),
+            uri: scmUri + '/api/publish?async=true&type=zip&clean=true&restart=true',
             body: fs.createReadStream(webPackage)
         };
 
@@ -24,8 +24,7 @@ export class Kudu {
 
         let pollRequest: WebRequest = {
             method: 'GET',
-            uri: pollableURL,
-            headers: {}
+            uri: pollableURL
         };
 
         while(true) {

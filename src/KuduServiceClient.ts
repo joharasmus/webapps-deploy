@@ -3,19 +3,17 @@ import { WebClient, WebRequest, WebRequestOptions, WebResponse } from 'azure-act
 
 
 export class KuduServiceClient {
-    private _scmUri;
     private _accessToken: string;
     private _cookie: string[];
     private _webClient: WebClient;
 
-    constructor(scmUri: string, accessToken: string) {
+    constructor(accessToken: string) {
         this._accessToken = accessToken;
-        this._scmUri = scmUri;
         this._webClient = new WebClient();
     }
 
     public async beginRequest(request: WebRequest, reqOptions?: WebRequestOptions, contentType?: string): Promise<WebResponse> {
-        request.headers = request.headers || {};
+        request.headers = {};
         request.headers["Authorization"] = `Basic ${this._accessToken}`
         request.headers['Content-Type'] = contentType || 'application/json; charset=utf-8';
 
@@ -29,8 +27,7 @@ export class KuduServiceClient {
             try {
                 let httpResponse = await this._webClient.sendRequest(request, reqOptions);
                 if(httpResponse.headers['set-cookie'] && !this._cookie) {
-                    this._cookie = httpResponse.headers['set-cookie'];
-
+                    //this._cookie = httpResponse.headers['set-cookie'];
                 }
 
                 return httpResponse;
@@ -47,15 +44,5 @@ export class KuduServiceClient {
             }
         }
 
-    }
-
-    public getRequestUri(uriFormat: string, queryParameters?: Array<string>) {
-        uriFormat = uriFormat[0] == "/" ? uriFormat : "/" + uriFormat;
-
-        if(queryParameters && queryParameters.length > 0) {
-            uriFormat = uriFormat + '?' + queryParameters.join('&');
-        }
-
-        return this._scmUri + uriFormat;
     }
 }

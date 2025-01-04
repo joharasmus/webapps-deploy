@@ -31,14 +31,7 @@ export async function main() {
 
   const accessToken = Buffer.from(username + ':' + password).toString('base64');
   
-  let queryParameters: Array<string> = [
-    'async=true',
-    'type=zip',
-    'clean=true',
-    'restart=true'
-  ];
-  
-  let deploymentDetails = await Kudu.oneDeploy(webPackage, queryParameters, uri, accessToken);
+  let deploymentDetails = await Kudu.oneDeploy(webPackage, uri, accessToken);
   console.log(deploymentDetails);
 }
 
