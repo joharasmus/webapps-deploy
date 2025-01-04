@@ -79,7 +79,7 @@ export class Kudu {
                     return result;
                 }
                 else {
-                    await this._sleep();
+                    await new Promise(_ => setTimeout(_, 2000));
                     continue;
                 }
             }
@@ -99,11 +99,5 @@ export class Kudu {
         }
 
         return error;
-    }
-
-    private _sleep(): Promise<any> {
-        return new Promise((_) => {
-            setTimeout(_, 5000);
-        });
     }
 }
