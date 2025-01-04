@@ -10,7 +10,7 @@ export class SecretParser {
     private dom: string;
 
     constructor(content: string) {
-        this.dom = new domParser().parseFromString(content);
+        this.dom = new domParser().parseFromString(content, "application/xml");
     }
 
     /**
