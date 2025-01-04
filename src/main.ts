@@ -1,11 +1,13 @@
 import * as core from '@actions/core';
 
+import { Document, DOMParser } from '@xmldom/xmldom';
 import { Package } from 'azure-actions-utility/packageUtility';
 import { Kudu } from 'azure-actions-appservice-rest/Kudu/azure-app-kudu-service';
 import { KuduServiceUtility } from 'azure-actions-appservice-rest/Utilities/KuduServiceUtility';
 import * as utility from 'azure-actions-utility/utility';
 import * as zipUtility from 'azure-actions-utility/ziputility';
-import { SecretParser } from './secretParser';
+
+var xPathSelect = require('xpath').select;
 
 export async function main() {
   try {
@@ -14,12 +16,16 @@ export async function main() {
 
     let appPackage = new Package(packageInput);
     
-    let secrets = new SecretParser(publishProfileContent);
+    let dom: Document = new DOMParser().parseFromString(publishProfileContent, "application/xml");
     
-    let uri = secrets.getSecret("//publishProfile/@publishUrl", false);
+    let uri = xPathSelect("string(//publishProfile/@publishUrl)", dom, true);
     uri = `https://${uri}`;
-    let username = secrets.getSecret("//publishProfile/@userName", true);
-    let password = secrets.getSecret("//publishProfile/@userPWD", true);
+
+    let username = xPathSelect("string(//publishProfile/@userName)", dom, true);
+    core.setSecret(username);
+
+    let password = xPathSelect("string(//publishProfile/@userPWD)", dom, true)
+    core.setSecret(password);
     
     let kuduService = new Kudu(uri, { username, password });
     let kuduServiceUtility = new KuduServiceUtility(kuduService);
