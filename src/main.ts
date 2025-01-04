@@ -64,13 +64,11 @@ export async function main() {
     let password = xPathSelect("string(//publishProfile/@userPWD)", dom, true)
     core.setSecret(password);
     
-    let kuduService = new Kudu(uri, username, password);
-    //await kuduService.getAppSettings();
-
     let webPackage = appPackage.getPath();
     let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
     webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
     
+    let kuduService = new Kudu(uri, username, password);
     await deployUsingOneDeploy(webPackage, kuduService);
   }
   catch(error) {

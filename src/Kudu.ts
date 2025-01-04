@@ -26,29 +26,25 @@ export class Kudu {
             throw response;
         
         let pollableURL: string = response.headers.location;
-        return await this._getDeploymentDetailsFromPollURL(pollableURL);
-    }
 
-    private async _getDeploymentDetailsFromPollURL(pollURL: string):Promise<any> {
-        let httpRequest: WebRequest = {
+        let pollRequest: WebRequest = {
             method: 'GET',
-            uri: pollURL,
+            uri: pollableURL,
             headers: {}
         };
 
         while(true) {
-            let response = await this._client.beginRequest(httpRequest);
-            if(response.statusCode == 200) {
-                let result = response.body;
-                return result;
-            }
-            else if(response.statusCode == 202) {
-                await new Promise(_ => setTimeout(_, 1000));
+            await new Promise(_ => setTimeout(_, 1000));
+    
+            let response = await this._client.beginRequest(pollRequest);
+            
+            if(response.statusCode == 202)
                 continue;
-            }
-            else {
-                throw response;
-            }
+            
+            if(response.statusCode == 200)
+                return response.body;
+            
+            throw response; //another statuscode indicates something is wrong
         }
     }
 }
