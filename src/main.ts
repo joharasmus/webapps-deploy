@@ -35,7 +35,7 @@ export async function main() {
     let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
     webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
     
-    await kuduServiceUtility.deployUsingOneDeploy(webPackage, { slotName: "production", commitMessage: "" });
+    await kuduServiceUtility.deployUsingOneDeploy(webPackage);
   }
   catch(error) {
     core.setFailed("Deployment Failed, " + error);

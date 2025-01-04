@@ -1,14 +1,8 @@
-import * as core from '@actions/core';
 import * as fs from 'fs';
 
 import { KuduServiceClient } from './KuduServiceClient';
 import { WebRequest } from 'azure-actions-webclient/WebClient';
 
-
-export const KUDU_DEPLOYMENT_CONSTANTS = {
-    SUCCESS: 4,
-    FAILED: 3
-}
 
 export class Kudu {
     private _client: KuduServiceClient;
@@ -46,19 +40,17 @@ export class Kudu {
 
         try {
             let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
-            core.debug(`One Deploy response: ${JSON.stringify(response)}`);
+
             if (response.statusCode == 200) {
-                core.debug('Deployment passed');
+
                 return null;
             }
             else if (response.statusCode == 202) {
                 let pollableURL: string = response.headers.location;
                 if (!!pollableURL) {
-                    core.debug(`Polling for One Deploy URL: ${pollableURL}`);
                     return await this._getDeploymentDetailsFromPollURL(pollableURL);
                 }
                 else {
-                    core.debug('One Deploy returned 202 without pollable URL.');
                     return null;
                 }
             }
@@ -79,7 +71,7 @@ export class Kudu {
                 uri: this._client.getRequestUri(`/api/deployments/${deploymentID}`)
             };
             var response = await this._client.beginRequest(httpRequest);
-            core.debug(`getDeploymentDetails. Data: ${JSON.stringify(response)}`);
+
             if(response.statusCode == 200) {
                 return response.body;
             }
@@ -87,7 +79,7 @@ export class Kudu {
             throw response;
         }
         catch(error) {
-            throw Error("Failed to gte deployment logs.\n" + this._getFormattedError(error));
+            throw Error("Failed to get deployment logs.\n" + this._getFormattedError(error));
         }
     }
 
@@ -98,7 +90,7 @@ export class Kudu {
                 uri: log_url
             };
             var response = await this._client.beginRequest(httpRequest);
-            core.debug(`getDeploymentLogs. Data: ${JSON.stringify(response)}`);
+
             if(response.statusCode == 200) {
                 return response.body;
             }
@@ -106,7 +98,7 @@ export class Kudu {
             throw response;
         }
         catch(error) {
-            throw Error("Failed to gte deployment logs.\n" + this._getFormattedError(error));
+            throw Error("Failed to get deployment logs.\n" + this._getFormattedError(error));
         }
     }
 
@@ -121,12 +113,11 @@ export class Kudu {
             let response = await this._client.beginRequest(httpRequest);
             if(response.statusCode == 200 || response.statusCode == 202) {
                 var result = response.body;
-                core.debug(`POLL URL RESULT: ${JSON.stringify(response)}`);
-                if(result.status == KUDU_DEPLOYMENT_CONSTANTS.SUCCESS || result.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
+
+                if(result.status == 4 || result.status == 3) {
                     return result;
                 }
                 else {
-                    core.debug(`Deployment status: ${result.status} '${result.status_text}'. retry after 5 seconds`);
                     await this._sleep(5);
                     continue;
                 }
