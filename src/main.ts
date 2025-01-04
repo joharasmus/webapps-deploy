@@ -1,10 +1,10 @@
 import * as core from '@actions/core';
 import * as fs from 'node:fs';
-import * as utility from 'azure-actions-utility/utility';
-import * as zipUtility from 'azure-actions-utility/ziputility';
+import * as utility from './utility';
+import * as zipUtility from './zipUtility';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
-import { Package } from 'azure-actions-utility/packageUtility';
+import { Package } from './packageUtility';
 import { WebClient, WebRequest } from 'azure-actions-webclient/WebClient';
 
 var xPathSelect = require('xpath').select;
@@ -55,11 +55,9 @@ async function oneDeploy(webPackage: string, scmUri: string, accessToken: string
   if (response.statusCode != 202)
     throw response;
   
-  let pollableURL: string = response.headers.location;
-  
   let pollRequest: WebRequest = {
     method: 'GET',
-    uri: pollableURL,
+    uri: response.headers.location,
     headers: {
       'Authorization': `Basic ${accessToken}`,
       'Content-Type': 'application/json; charset=utf-8'
