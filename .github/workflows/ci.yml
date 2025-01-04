@@ -1,5 +1,7 @@
 on:
   push:
+    tags-ignore:
+      - v*
 
 jobs:
   build_test_job:
