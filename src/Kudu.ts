@@ -5,22 +5,17 @@ import { WebRequest } from 'azure-actions-webclient/WebClient';
 
 
 export class Kudu {
-    private _client: KuduServiceClient;
+    public static async oneDeploy(webPackage: string, queryParameters: Array<string>, scmUri: string, accessToken: string): Promise<any> {
 
-    constructor(scmUri: string, username: string, password: string) {
-        const accessToken = Buffer.from(username + ':' + password).toString('base64');
+        let client = new KuduServiceClient(scmUri, accessToken);
 
-        this._client = new KuduServiceClient(scmUri, accessToken);
-    }
-
-    public async oneDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
         let httpRequest: WebRequest = {
             method: 'POST',
-            uri: this._client.getRequestUri(`/api/publish`, queryParameters),
+            uri: client.getRequestUri(`/api/publish`, queryParameters),
             body: fs.createReadStream(webPackage)
         };
 
-        let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
+        let response = await client.beginRequest(httpRequest, null, 'application/octet-stream');
 
         if (response.statusCode != 202)
             throw response;
@@ -36,7 +31,7 @@ export class Kudu {
         while(true) {
             await new Promise(_ => setTimeout(_, 1000));
     
-            let response = await this._client.beginRequest(pollRequest);
+            let response = await client.beginRequest(pollRequest);
             
             if(response.statusCode == 202)
                 continue;

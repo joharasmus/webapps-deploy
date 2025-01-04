@@ -8,7 +8,28 @@ import { Kudu } from './Kudu';
 
 var xPathSelect = require('xpath').select;
 
-export async function deployUsingOneDeploy(packagePath: string, kuduService: Kudu): Promise<void> {
+export async function main() {
+  let publishProfileContent = core.getInput('publish-profile');
+  let packageInput = core.getInput('package');
+
+  let appPackage = new Package(packageInput);
+
+  let dom: Document = new DOMParser().parseFromString(publishProfileContent, "application/xml");
+
+  let uri = xPathSelect("string(//publishProfile/@publishUrl)", dom, true);
+  uri = `https://${uri}`;
+
+  let username = xPathSelect("string(//publishProfile/@userName)", dom, true);
+  core.setSecret(username);
+
+  let password = xPathSelect("string(//publishProfile/@userPWD)", dom, true)
+  core.setSecret(password);
+
+  let webPackage = appPackage.getPath();
+  let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
+  webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
+
+  const accessToken = Buffer.from(username + ':' + password).toString('base64');
   
   let queryParameters: Array<string> = [
     'async=true',
@@ -18,39 +39,8 @@ export async function deployUsingOneDeploy(packagePath: string, kuduService: Kud
     'restart=true'
   ];
   
-  let deploymentDetails = await kuduService.oneDeploy(packagePath, queryParameters);
+  let deploymentDetails = await Kudu.oneDeploy(webPackage, queryParameters, uri, accessToken);
   console.log(deploymentDetails);
-  
-}
-
-export async function main() {
-  try {
-    let publishProfileContent = core.getInput('publish-profile');
-    let packageInput = core.getInput('package');
-
-    let appPackage = new Package(packageInput);
-    
-    let dom: Document = new DOMParser().parseFromString(publishProfileContent, "application/xml");
-    
-    let uri = xPathSelect("string(//publishProfile/@publishUrl)", dom, true);
-    uri = `https://${uri}`;
-
-    let username = xPathSelect("string(//publishProfile/@userName)", dom, true);
-    core.setSecret(username);
-
-    let password = xPathSelect("string(//publishProfile/@userPWD)", dom, true)
-    core.setSecret(password);
-    
-    let webPackage = appPackage.getPath();
-    let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
-    webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
-    
-    let kuduService = new Kudu(uri, username, password);
-    await deployUsingOneDeploy(webPackage, kuduService);
-  }
-  catch(error) {
-    core.setFailed("Deployment Failed, " + error);
-  }
 }
 
 main();
