@@ -63,45 +63,6 @@ export class Kudu {
         }
     }
 
-
-    public async getDeploymentDetails(deploymentID: string): Promise<any> {
-        try {
-            var httpRequest: WebRequest = {
-                method: 'GET',
-                uri: this._client.getRequestUri(`/api/deployments/${deploymentID}`)
-            };
-            var response = await this._client.beginRequest(httpRequest);
-
-            if(response.statusCode == 200) {
-                return response.body;
-            }
-
-            throw response;
-        }
-        catch(error) {
-            throw Error("Failed to get deployment logs.\n" + this._getFormattedError(error));
-        }
-    }
-
-    public async getDeploymentLogs(log_url: string): Promise<any> {
-        try {
-            var httpRequest: WebRequest = {
-                method: 'GET',
-                uri: log_url
-            };
-            var response = await this._client.beginRequest(httpRequest);
-
-            if(response.statusCode == 200) {
-                return response.body;
-            }
-
-            throw response;
-        }
-        catch(error) {
-            throw Error("Failed to get deployment logs.\n" + this._getFormattedError(error));
-        }
-    }
-
     private async _getDeploymentDetailsFromPollURL(pollURL: string):Promise<any> {
         let httpRequest: WebRequest = {
             method: 'GET',
@@ -118,7 +79,7 @@ export class Kudu {
                     return result;
                 }
                 else {
-                    await this._sleep(5);
+                    await new Promise(() => setTimeout(null, 2000) );
                     continue;
                 }
             }
@@ -132,20 +93,11 @@ export class Kudu {
         if(error && error.statusCode) {
             return `${error.statusMessage} (CODE: ${error.statusCode})`;
         }
-        else if(error && error.message) {
-            if(error.statusCode) {
-                error.message = `${typeof error.message.valueOf() == 'string' ? error.message : error.message.Code + " - " + error.message.Message } (CODE: ${error.statusCode})`
-            }
-
+        
+        if(error && error.message) {
             return error.message;
         }
 
         return error;
-    }
-
-    private _sleep(sleepDurationInSeconds: number): Promise<any> {
-        return new Promise((resolve) => {
-            setTimeout(resolve, sleepDurationInSeconds * 1000);
-        });
     }
 }

@@ -5,9 +5,46 @@ import * as zipUtility from 'azure-actions-utility/ziputility';
 import { Document, DOMParser } from '@xmldom/xmldom';
 import { Package } from 'azure-actions-utility/packageUtility';
 import { Kudu } from './Kudu';
-import { KuduServiceUtility } from './KuduServiceUtility';
 
 var xPathSelect = require('xpath').select;
+
+export async function deployUsingOneDeploy(packagePath: string, kuduService: Kudu): Promise<void> {
+  try {
+    console.log('Package deployment using OneDeploy initiated.');
+    
+    let queryParameters: Array<string> = [
+      'async=true',
+      'deployer=GITHUB_ONE_DEPLOY',
+      'type=zip',
+      'clean=true',
+      'restart=true'
+    ];
+    
+    let message = {
+      type: "deployment",
+      sha: `${process.env.GITHUB_SHA}`,
+      repoName: `${process.env.GITHUB_REPOSITORY}`,
+      actor: `${process.env.GITHUB_ACTOR}`,
+      slotName: "production"
+    };
+    
+    let deploymentMessage = JSON.stringify(message);
+    queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
+    
+    let deploymentDetails = await kuduService.oneDeploy(packagePath, queryParameters);
+    console.log(deploymentDetails);
+    
+    if (deploymentDetails.status == 3) {
+      throw 'Package deployment using ZIP Deploy failed. Refer logs for more details.';
+    }
+    
+    console.log('Successfully deployed web package to App Service.');
+  }
+  catch (error) {
+    core.error('Failed to deploy web package to App Service.');
+    throw error;
+  }
+}
 
 export async function main() {
   try {
@@ -29,17 +66,16 @@ export async function main() {
     
     let kuduService = new Kudu(uri, username, password);
     await kuduService.getAppSettings();
-    let kuduServiceUtility = new KuduServiceUtility(kuduService);
 
     let webPackage = appPackage.getPath();
     let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
     webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
     
-    await kuduServiceUtility.deployUsingOneDeploy(webPackage);
+    await deployUsingOneDeploy(webPackage, kuduService);
   }
   catch(error) {
     core.setFailed("Deployment Failed, " + error);
   }
 }
-  
+
 main();
