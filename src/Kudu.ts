@@ -15,7 +15,7 @@ export class Kudu {
             body: fs.createReadStream(webPackage)
         };
 
-        let response = await client.beginRequest(httpRequest, null, 'application/octet-stream');
+        let response = await client.beginRequest(httpRequest, 'application/octet-stream');
 
         if (response.statusCode != 202)
             throw response;
