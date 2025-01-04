@@ -102,6 +102,8 @@ export class Kudu {
     }
 
     private _sleep(): Promise<any> {
-        return new Promise(() => { setTimeout(null, 5000); });
+        return new Promise((_) => {
+            setTimeout(_, 5000);
+        });
     }
 }
