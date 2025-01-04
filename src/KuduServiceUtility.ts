@@ -5,21 +5,11 @@ import * as core from '@actions/core';
 const GITHUB_ONE_DEPLOY: string = 'GITHUB_ONE_DEPLOY';
 
 export class KuduServiceUtility {
-    private _webAppKuduService: Kudu;
+    public webAppKuduService: Kudu;
     private _deploymentID: string;
 
     constructor(kuduService: Kudu) {
-        this._webAppKuduService = kuduService;
-    }
-
-    public async updateDeploymentStatus(taskResult: boolean, DeploymentID: string, customMessage: any): Promise<string> {
-        try {
-            let requestBody = this._getUpdateHistoryRequest(taskResult, DeploymentID, customMessage);
-            return await this._webAppKuduService.updateDeployment(requestBody);
-        }
-        catch(error) {
-            core.warning(error);
-        }
+        this.webAppKuduService = kuduService;
     }
 
     public getDeploymentID(): string {
@@ -57,7 +47,7 @@ export class KuduServiceUtility {
 
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
-            let deploymentDetails = await this._webAppKuduService.oneDeploy(packagePath, queryParameters);
+            let deploymentDetails = await this.webAppKuduService.oneDeploy(packagePath, queryParameters);
             console.log(deploymentDetails);
             await this._processDeploymentResponse(deploymentDetails);
             console.log('Successfully deployed web package to App Service.');
@@ -70,20 +60,9 @@ export class KuduServiceUtility {
         }
     }
 
-    public async warmUp(): Promise<void> {
-        try {
-            core.debug('warming up Kudu Service');
-            await this._webAppKuduService.getAppSettings();
-            core.debug('warmed up Kudu Service');
-        }
-        catch(error) {
-            core.debug('Failed to warm-up Kudu: ' + error.toString());
-        }
-    }
-
     private async _processDeploymentResponse(deploymentDetails: any): Promise<void> {
         try {
-            var kuduDeploymentDetails = await this._webAppKuduService.getDeploymentDetails(deploymentDetails.id);
+            var kuduDeploymentDetails = await this.webAppKuduService.getDeploymentDetails(deploymentDetails.id);
             core.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
 
             if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
@@ -107,7 +86,7 @@ export class KuduServiceUtility {
             return;
         }
 
-        var deploymentLogs = await this._webAppKuduService.getDeploymentLogs(log_url);
+        var deploymentLogs = await this.webAppKuduService.getDeploymentLogs(log_url);
         for(var deploymentLog of deploymentLogs) {
             console.log(`${deploymentLog.message}`);
             if(deploymentLog.details_url) {

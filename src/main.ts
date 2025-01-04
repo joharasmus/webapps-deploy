@@ -27,9 +27,9 @@ export async function main() {
     let password = xPathSelect("string(//publishProfile/@userPWD)", dom, true)
     core.setSecret(password);
     
-    let kuduService = new Kudu(uri, { username, password });
+    let kuduService = new Kudu(uri, username, password);
+    await kuduService.getAppSettings();
     let kuduServiceUtility = new KuduServiceUtility(kuduService);
-    await kuduServiceUtility.warmUp();
 
     let webPackage = appPackage.getPath();
     let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);

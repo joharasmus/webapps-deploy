@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as fs from 'fs';
 
 import { KuduServiceClient } from './KuduServiceClient';
-import { WebRequest, WebRequestOptions } from 'azure-actions-webclient/WebClient';
+import { WebRequest } from 'azure-actions-webclient/WebClient';
 
 
 export const KUDU_DEPLOYMENT_CONSTANTS = {
@@ -13,39 +13,14 @@ export const KUDU_DEPLOYMENT_CONSTANTS = {
 export class Kudu {
     private _client: KuduServiceClient;
 
-    constructor(scmUri: string, credentials: {username: string, password: string} | string) {
-        const accessToken = typeof credentials === 'string'
-            ? credentials
-            : (new Buffer(credentials.username + ':' + credentials.password).toString('base64'));
-        const accessTokenType = typeof credentials === 'string' ? "Bearer" : "Basic"
+    constructor(scmUri: string, username: string, password: string) {
+        const accessToken = Buffer.from(username + ':' + password).toString('base64');
 
-        this._client = new KuduServiceClient(scmUri, accessToken, accessTokenType);
+        this._client = new KuduServiceClient(scmUri, accessToken);
     }
 
-    public async updateDeployment(requestBody: any): Promise<string> {
-        var httpRequest: WebRequest = {
-            method: 'PUT',
-            body: JSON.stringify(requestBody),
-            uri: this._client.getRequestUri(`/api/deployments/${requestBody.id}`)
-        };
-
-        try {
-            let webRequestOptions: WebRequestOptions = {retriableErrorCodes: [], retriableStatusCodes: null, retryCount: 5, retryIntervalInSeconds: 5, retryRequestTimedout: true};
-            var response = await this._client.beginRequest(httpRequest, webRequestOptions);
-            core.debug(`updateDeployment. Data: ${JSON.stringify(response)}`);
-            if(response.statusCode == 200) {
-                console.log("Successfully updated deployment History at " + response.body.url);
-                return response.body.id;
-            }
-
-            throw response;
-        }
-        catch(error) {
-            throw Error("Failed to update deployment history.\n" + this._getFormattedError(error));
-        }
-    }
-
-    public async getAppSettings(): Promise<Map<string, string>> {
+    // The below is for warming up kudu - is it really necessary? (RJ)
+    public async getAppSettings(): Promise<void> {
         var httpRequest: WebRequest = {
             method: 'GET',
             uri: this._client.getRequestUri(`/api/settings`)
@@ -53,16 +28,9 @@ export class Kudu {
 
         try {
             var response = await this._client.beginRequest(httpRequest);
-            var responseBody = JSON.stringify(response.body);
-            var appSettingsMap = JSON.parse(responseBody);
 
-            core.debug(`App settings: ${Object.keys(appSettingsMap)}`);
-
-            if(response.statusCode == 200) {
-                return response.body;
-            }
-
-            throw response;
+            if(response.statusCode !== 200)
+                throw response;
         }
         catch(error) {
             throw Error("Failed to fetch Kudu App Settings.\n" + this._getFormattedError(error));
