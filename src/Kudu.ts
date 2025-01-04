@@ -20,15 +20,10 @@ export class Kudu {
             uri: this._client.getRequestUri(`/api/settings`)
         };
 
-        try {
-            var response = await this._client.beginRequest(httpRequest);
-
-            if(response.statusCode !== 200)
-                throw response;
-        }
-        catch(error) {
-            throw Error("Failed to fetch Kudu App Settings.\n" + this._getFormattedError(error));
-        }
+        var response = await this._client.beginRequest(httpRequest);
+        
+        if(response.statusCode !== 200)
+            throw response;
     }
 
     public async oneDeploy(webPackage: string, queryParameters?: Array<string>): Promise<any> {
@@ -38,29 +33,13 @@ export class Kudu {
             body: fs.createReadStream(webPackage)
         };
 
-        try {
-            let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
+        let response = await this._client.beginRequest(httpRequest, null, 'application/octet-stream');
 
-            if (response.statusCode == 200) {
-
-                return null;
-            }
-            else if (response.statusCode == 202) {
-                let pollableURL: string = response.headers.location;
-                if (!!pollableURL) {
-                    return await this._getDeploymentDetailsFromPollURL(pollableURL);
-                }
-                else {
-                    return null;
-                }
-            }
-            else {
-                throw response;
-            }
-        }
-        catch (error) {
-            throw Error("Failed to deploy web package using OneDeploy to App Service.\n" + this._getFormattedError(error));
-        }
+        if (response.statusCode != 202)
+            throw response;
+        
+        let pollableURL: string = response.headers.location;
+        return await this._getDeploymentDetailsFromPollURL(pollableURL);
     }
 
     private async _getDeploymentDetailsFromPollURL(pollURL: string):Promise<any> {
@@ -79,7 +58,7 @@ export class Kudu {
                     return result;
                 }
                 else {
-                    await new Promise(_ => setTimeout(_, 2000));
+                    await new Promise(_ => setTimeout(_, 1000));
                     continue;
                 }
             }
@@ -87,17 +66,5 @@ export class Kudu {
                 throw response;
             }
         }
-    }
-
-    private _getFormattedError(error: any) {
-        if(error && error.statusCode) {
-            return `${error.statusMessage} (CODE: ${error.statusCode})`;
-        }
-        
-        if(error && error.message) {
-            return error.message;
-        }
-
-        return error;
     }
 }
