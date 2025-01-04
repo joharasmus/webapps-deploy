@@ -5,7 +5,7 @@ import { Kudu } from 'azure-actions-appservice-rest/Kudu/azure-app-kudu-service'
 import { KuduServiceUtility } from 'azure-actions-appservice-rest/Utilities/KuduServiceUtility';
 import * as utility from 'azure-actions-utility/utility';
 import * as zipUtility from 'azure-actions-utility/ziputility';
-import { FormatType, SecretParser } from './secretParser';
+import { SecretParser } from './secretParser';
 
 export async function main() {
   try {
@@ -14,7 +14,7 @@ export async function main() {
 
     let appPackage = new Package(packageInput);
     
-    let secrets = new SecretParser(publishProfileContent, FormatType.XML);
+    let secrets = new SecretParser(publishProfileContent);
     
     let uri = secrets.getSecret("//publishProfile/@publishUrl", false);
     uri = `https://${uri}`;
