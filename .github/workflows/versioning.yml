@@ -1,4 +1,6 @@
 on: workflow_dispatch
+env:
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   renew_version:
