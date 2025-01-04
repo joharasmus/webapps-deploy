@@ -2,8 +2,6 @@ import { KUDU_DEPLOYMENT_CONSTANTS } from './Kudu';
 import { Kudu } from './Kudu';
 import * as core from '@actions/core';
 
-const GITHUB_ONE_DEPLOY: string = 'GITHUB_ONE_DEPLOY';
-
 export class KuduServiceUtility {
     public webAppKuduService: Kudu;
     private _deploymentID: string;
@@ -21,29 +19,16 @@ export class KuduServiceUtility {
         return deploymentID;
     }
 
-    public async deployUsingOneDeploy(packagePath: string, customMessage?: any, targetPath?: any, type?: any, clean?: any, restart?: any): Promise<string> {
+    public async deployUsingOneDeploy(packagePath: string, customMessage?: any): Promise<void> {
         try {
             console.log('Package deployment using OneDeploy initiated.');
             let queryParameters: Array<string> = [
                 'async=true',
-                'deployer=' + GITHUB_ONE_DEPLOY
+                'deployer=GITHUB_ONE_DEPLOY',
+                'type=zip',
+                'clean=true',
+                'restart=true'
             ];
-
-            if (type) {
-                queryParameters.push('type=' + encodeURIComponent(type));
-            }
-
-            if (targetPath) {
-                queryParameters.push('path=' + encodeURIComponent(targetPath));
-            }
-
-            if (clean) {
-                queryParameters.push('clean=' + encodeURIComponent(clean));
-            }
-
-            if (restart) {
-                queryParameters.push('restart=' + encodeURIComponent(restart));
-            }
 
             var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
@@ -51,8 +36,6 @@ export class KuduServiceUtility {
             console.log(deploymentDetails);
             await this._processDeploymentResponse(deploymentDetails);
             console.log('Successfully deployed web package to App Service.');
-
-            return deploymentDetails.id;
         }
         catch (error) {
             core.error('Failed to deploy web package to App Service.');
