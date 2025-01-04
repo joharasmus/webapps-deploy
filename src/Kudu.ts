@@ -79,7 +79,7 @@ export class Kudu {
                     return result;
                 }
                 else {
-                    await new Promise(() => setTimeout(null, 2000) );
+                    await new Promise(() => { setTimeout(null, 2000) } );
                     continue;
                 }
             }
