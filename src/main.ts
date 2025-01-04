@@ -2,8 +2,8 @@ import * as core from '@actions/core';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
 import { Package } from 'azure-actions-utility/packageUtility';
-import { Kudu } from 'azure-actions-appservice-rest/Kudu/azure-app-kudu-service';
-import { KuduServiceUtility } from 'azure-actions-appservice-rest/Utilities/KuduServiceUtility';
+import { Kudu } from './Kudu';
+import { KuduServiceUtility } from './KuduServiceUtility';
 import * as utility from 'azure-actions-utility/utility';
 import * as zipUtility from 'azure-actions-utility/ziputility';
 
