@@ -30,7 +30,7 @@ export class KuduServiceUtility {
                 'restart=true'
             ];
 
-            var deploymentMessage = this._getUpdateHistoryRequest(null, null, customMessage).message;
+            var deploymentMessage = this._getUpdateHistoryRequest(customMessage).message;
             queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
             let deploymentDetails = await this.webAppKuduService.oneDeploy(packagePath, queryParameters);
             console.log(deploymentDetails);
@@ -44,42 +44,22 @@ export class KuduServiceUtility {
     }
 
     private async _processDeploymentResponse(deploymentDetails: any): Promise<void> {
-        try {
-            var kuduDeploymentDetails = await this.webAppKuduService.getDeploymentDetails(deploymentDetails.id);
-            core.debug(`logs from kudu deploy: ${kuduDeploymentDetails.log_url}`);
-
-            if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
-                await this._printZipDeployLogs(kuduDeploymentDetails.log_url);
-            }
-            else {
-                console.log('Deploy logs can be viewed at %s', kuduDeploymentDetails.log_url);
-            }
-        }
-        catch(error) {
-            core.debug(`Unable to fetch logs for kudu Deploy: ${JSON.stringify(error)}`);
-        }
-
+        var kuduDeploymentDetails = await this.webAppKuduService.getDeploymentDetails(deploymentDetails.id);
+        
         if(deploymentDetails.status == KUDU_DEPLOYMENT_CONSTANTS.FAILED) {
+
+            var deploymentLogs = await this.webAppKuduService.getDeploymentLogs(kuduDeploymentDetails.log_url);
+            for(var deploymentLog of deploymentLogs) {
+                console.log(`${deploymentLog.message}`);
+            }
+
             throw 'Package deployment using ZIP Deploy failed. Refer logs for more details.';
         }
     }
 
-    private async _printZipDeployLogs(log_url: string): Promise<void> {
-        if(!log_url) {
-            return;
-        }
-
-        var deploymentLogs = await this.webAppKuduService.getDeploymentLogs(log_url);
-        for(var deploymentLog of deploymentLogs) {
-            console.log(`${deploymentLog.message}`);
-            if(deploymentLog.details_url) {
-                await this._printZipDeployLogs(deploymentLog.details_url);
-            }
-        }
-    }
-
-    private _getUpdateHistoryRequest(isDeploymentSuccess: boolean, deploymentID?: string, customMessage?: any): any {    
-        deploymentID = !!deploymentID ? deploymentID : this.getDeploymentID();
+    private _getUpdateHistoryRequest(customMessage?: any): any {    
+        let deploymentID = this.getDeploymentID();
+        let isDeploymentSuccess = null;
         
         var message = {
             type : "deployment",
