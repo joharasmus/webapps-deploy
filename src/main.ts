@@ -22,8 +22,7 @@ export async function deployUsingOneDeploy(packagePath: string, kuduService: Kud
     
     let message = {
       type: "deployment",
-      sha: `${process.env.GITHUB_SHA}`,
-      repoName: `${process.env.GITHUB_REPOSITORY}`
+      sha: `${process.env.GITHUB_SHA}`
     };
     
     let deploymentMessage = JSON.stringify(message);
