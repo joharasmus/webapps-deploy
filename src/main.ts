@@ -24,7 +24,6 @@ export async function deployUsingOneDeploy(packagePath: string, kuduService: Kud
     };
     
     let deploymentMessage = JSON.stringify(message);
-    queryParameters.push('message=' + encodeURIComponent(deploymentMessage));
     
     let deploymentDetails = await kuduService.oneDeploy(packagePath, queryParameters);
     console.log(deploymentDetails);
