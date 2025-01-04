@@ -1,11 +1,10 @@
-import fs = require('fs');
+import * as core from '@actions/core';
+import * as fs from 'fs';
 
+import { exists } from '@actions/io/lib/io-util';
+import { KuduServiceClient } from './KuduServiceClient';
 import { WebRequest, WebRequestOptions } from 'azure-actions-webclient/WebClient';
 
-import { KuduServiceClient } from './KuduServiceClient';
-import { exists } from '@actions/io/lib/io-util';
-
-import core = require('@actions/core');
 
 export const KUDU_DEPLOYMENT_CONSTANTS = {
     SUCCESS: 4,

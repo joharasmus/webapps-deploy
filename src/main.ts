@@ -1,11 +1,11 @@
 import * as core from '@actions/core';
+import * as utility from 'azure-actions-utility/utility';
+import * as zipUtility from 'azure-actions-utility/ziputility';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
 import { Package } from 'azure-actions-utility/packageUtility';
 import { Kudu } from './Kudu';
 import { KuduServiceUtility } from './KuduServiceUtility';
-import * as utility from 'azure-actions-utility/utility';
-import * as zipUtility from 'azure-actions-utility/ziputility';
 
 var xPathSelect = require('xpath').select;
 

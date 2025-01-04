@@ -14,8 +14,6 @@
     "@actions/core": "1.11.1",
     "@actions/io":"1.0.1",
     "@xmldom/xmldom": "0.9.6",
-    "fs": "0.0.1-security",
-    "path":"0.12.7",
     "azure-actions-utility": "1.0.3",
     "azure-actions-webclient":"1.1.1",
     "xpath": "0.0.34"

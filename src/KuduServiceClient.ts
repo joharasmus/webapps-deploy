@@ -1,8 +1,8 @@
-import util = require('util');
+import * as core from '@actions/core';
+import * as util from 'util';
 
 import { WebClient, WebRequest, WebRequestOptions, WebResponse } from 'azure-actions-webclient/WebClient';
 
-import core = require('@actions/core');
 
 export class KuduServiceClient {
     private _scmUri;
