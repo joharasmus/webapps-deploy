@@ -24,8 +24,7 @@ export async function deployUsingOneDeploy(packagePath: string, kuduService: Kud
       type: "deployment",
       sha: `${process.env.GITHUB_SHA}`,
       repoName: `${process.env.GITHUB_REPOSITORY}`,
-      actor: `${process.env.GITHUB_ACTOR}`,
-      slotName: "production"
+      actor: `${process.env.GITHUB_ACTOR}`
     };
     
     let deploymentMessage = JSON.stringify(message);
