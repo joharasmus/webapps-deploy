@@ -1,7 +1,7 @@
 var core = require('@actions/core');
+var domParser = require('@xmldom/xmldom').DOMParser;
 var jp = require('jsonpath');
 var xpath = require('xpath');
-var domParser = require('xmldom').DOMParser;
 
 export enum FormatType {
     "JSON",
