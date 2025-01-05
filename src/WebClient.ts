@@ -34,7 +34,7 @@ export class WebClient {
 
     public async sendRequest(request: WebRequest): Promise<WebResponse> {
         let i = 0;
-        let retryCount = 3;
+        let retryCount = 2;
         let retryIntervalInSeconds = 2;
         let retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
         let retriableStatusCodes = [408, 409, 500, 502, 503, 504];
