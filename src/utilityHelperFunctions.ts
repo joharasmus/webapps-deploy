@@ -1,12 +1,10 @@
 
-import * as core from '@actions/core';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import minimatch from 'minimatch';
 
 export function find(findPath: string): string[] {
     if (!findPath) {
-        core.debug('no path specified');
         return [];
     }
 
@@ -14,16 +12,12 @@ export function find(findPath: string): string[] {
     // because path.join() performs normalization.
     findPath = path.normalize(findPath);
 
-    // debug trace the parameters
-    core.debug(`findPath: '${findPath}'`);
-
     // return empty if not exists
     try {
         fs.lstatSync(findPath);
     }
     catch (err) {
         if (err.code == 'ENOENT') {
-            core.debug('0 results')
             return [];
         }
 
@@ -42,7 +36,6 @@ export function find(findPath: string): string[] {
             result.push(item.path);
 
             // stat the item.  the stat info is used further below to determine whether to traverse deeper
-            //
             // stat returns info about the target of a symlink (or symlink chain),
             // lstat returns info about a symlink itself
             let stats: fs.Stats;
@@ -51,7 +44,6 @@ export function find(findPath: string): string[] {
 
             // note, isDirectory() returns false for the lstat of a symlink
             if (stats.isDirectory()) {
-                core.debug(`  ${item.path} (directory)`);
 
                 // push the child items in reverse onto the stack
                 let childLevel: number = item.level + 1;
@@ -62,12 +54,8 @@ export function find(findPath: string): string[] {
                     stack.push(childItems[i]);
                 }
             }
-            else {
-                core.debug(`  ${item.path} (file)`);
-            }
         }
 
-        core.debug(`${result.length} results`);
         return result;
     }
     catch (err) {
@@ -115,25 +103,9 @@ function _getDefaultMatchOptions(): MatchOptions {
     };
 }
 
-function _debugMatchOptions(options: MatchOptions): void {
-    core.debug(`matchOptions.debug: '${options.debug}'`);
-    core.debug(`matchOptions.nobrace: '${options.nobrace}'`);
-    core.debug(`matchOptions.noglobstar: '${options.noglobstar}'`);
-    core.debug(`matchOptions.dot: '${options.dot}'`);
-    core.debug(`matchOptions.noext: '${options.noext}'`);
-    core.debug(`matchOptions.nocase: '${options.nocase}'`);
-    core.debug(`matchOptions.nonull: '${options.nonull}'`);
-    core.debug(`matchOptions.matchBase: '${options.matchBase}'`);
-    core.debug(`matchOptions.nocomment: '${options.nocomment}'`);
-    core.debug(`matchOptions.nonegate: '${options.nonegate}'`);
-    core.debug(`matchOptions.flipNegate: '${options.flipNegate}'`);
-}
-
 export function match(list: string[], patterns: string[] | string, patternRoot?: string, options?: MatchOptions): string[] {
     // trace parameters
-    core.debug(`patternRoot: '${patternRoot}'`);
     options = options || _getDefaultMatchOptions(); // default match options
-    _debugMatchOptions(options);
 
     // convert pattern to an array
     if (typeof patterns == 'string') {
@@ -145,12 +117,10 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
 
     let originalOptions = options;
     for (let pattern of patterns) {
-        core.debug(`pattern: '${pattern}'`);
 
         // trim and skip empty
         pattern = (pattern || '').trim();
         if (!pattern) {
-            core.debug('skipping empty pattern');
             continue;
         }
 
@@ -159,7 +129,6 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
 
         // skip comments
         if (!options.nocomment && _startsWith(pattern, '#')) {
-            core.debug('skipping comment');
             continue;
         }
 
@@ -174,9 +143,6 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
             }
 
             pattern = pattern.substring(negateCount); // trim leading '!'
-            if (negateCount) {
-                core.debug(`trimmed leading '!'. pattern: '${pattern}'`);
-            }
         }
 
         let isIncludePattern = negateCount == 0 ||
@@ -189,14 +155,12 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
 
         // expand braces - required to accurately root patterns
         let expanded: string[];
-        let preExpanded: string = pattern;
         if (options.nobrace) {
             expanded = [pattern];
         }
         else {
             // convert slashes on Windows before calling braceExpand(). unfortunately this means braces cannot
             // be escaped on Windows, this limitation is consistent with current limitations of minimatch (3.0.3).
-            core.debug('expanding braces');
             let convertedPattern = process.platform == 'win32' ? pattern.replace(/\\/g, '/') : pattern;
             expanded = (minimatch as any).braceExpand(convertedPattern);
         }
@@ -205,14 +169,9 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
         options.nobrace = true;
 
         for (let pattern of expanded) {
-            if (expanded.length != 1 || pattern != preExpanded) {
-                core.debug(`pattern: '${pattern}'`);
-            }
-
             // trim and skip empty
             pattern = (pattern || '').trim();
             if (!pattern) {
-                core.debug('skipping empty pattern');
                 continue;
             }
 
@@ -223,14 +182,11 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
                 (!options.matchBase || (process.platform == 'win32' ? pattern.replace(/\\/g, '/') : pattern).indexOf('/') >= 0)) {
 
                 pattern = _ensureRooted(patternRoot, pattern);
-                core.debug(`rooted pattern: '${pattern}'`);
             }
 
             if (isIncludePattern) {
                 // apply the pattern
-                core.debug('applying include pattern against original list');
                 let matchResults: string[] = minimatch.match(list, pattern, options);
-                core.debug(matchResults.length + ' matches');
 
                 // union the results
                 for (let matchResult of matchResults) {
@@ -239,9 +195,7 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
             }
             else {
                 // apply the pattern
-                core.debug('applying exclude pattern against original list');
                 let matchResults: string[] = minimatch.match(list, pattern, options);
-                core.debug(matchResults.length + ' matches');
 
                 // substract the results
                 for (let matchResult of matchResults) {
@@ -253,7 +207,6 @@ export function match(list: string[], patterns: string[] | string, patternRoot?:
 
     // return a filtered version of the original list (preserves order and prevents duplication)
     let result: string[] = list.filter((item: string) => map.hasOwnProperty(item));
-    core.debug(result.length + ' final results');
     return result;
 }
 

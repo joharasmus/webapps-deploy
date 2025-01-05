@@ -1,16 +1,13 @@
 
-import * as core from '@actions/core';
+import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as path from 'node:path';
 
 import { find, match } from './utilityHelperFunctions';
-import * as fs from 'node:fs';
 import archiver from 'archiver';
 
 
 export function findfiles(filepath: string): string[] {
-
-    core.debug("Finding files matching input: " + filepath);
 
     var filesList : string [];
     if (filepath.indexOf('*') == -1 && filepath.indexOf('?') == -1) {
@@ -20,7 +17,6 @@ export function findfiles(filepath: string): string[] {
             filesList = [filepath];
         }
         else {
-            core.debug('No matching files were found with search pattern: ' + filepath);
             return [];
         }
     } else {
@@ -36,19 +32,13 @@ export function findfiles(filepath: string): string[] {
             return idx;
         }
 
-        // Find app files matching the specified pattern
-        core.debug('Matching glob pattern: ' + filepath);
-
         // First find the most complete path without any matching patterns
         var idx = firstWildcardIndex(filepath);
-        core.debug('Index of first wildcard: ' + idx);
         var slicedPath = filepath.slice(0, idx);
         var findPathRoot = path.dirname(slicedPath);
         if(slicedPath.endsWith("\\") || slicedPath.endsWith("/")){
             findPathRoot = slicedPath;
         }
-
-        core.debug('find root dir: ' + findPathRoot);
 
         // Now we get a list of all files under this root
         var allFiles = find(findPathRoot);
@@ -58,7 +48,6 @@ export function findfiles(filepath: string): string[] {
 
         // Fail if no matching files were found
         if (!filesList || filesList.length == 0) {
-            core.debug('No matching files were found with search pattern: ' + filepath);
             return [];
         }
     }
