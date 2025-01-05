@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
 import * as fs from 'node:fs';
-import * as utility from './utility';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
 import { WebClient, WebRequest } from 'azure-actions-webclient/WebClient';
+import archiver from 'archiver';
 
 var xPathSelect = require('xpath').select;
 
@@ -22,9 +22,8 @@ export async function main() {
   let password = xPathSelect("string(//publishProfile/@userPWD)", publishProfileXml, true)
   core.setSecret(password);
 
-  let webPackage = packageInput;
-  let tempPackagePath = webPackage + ".zip";
-  await utility.archiveFolder(webPackage, tempPackagePath);
+  let tempPackagePath = packageInput + ".zip";
+  await archiveFolder(packageInput, tempPackagePath);
 
   const accessToken = Buffer.from(username + ':' + password).toString('base64');
   
@@ -76,3 +75,12 @@ async function oneDeploy(webPackage: string, scmUri: string, accessToken: string
 }
 
 main();
+export async function archiveFolder(folderPath: string, zipName: string): Promise<void> {
+
+    let output = fs.createWriteStream(zipName);
+
+    let archive = archiver('zip');
+    archive.pipe(output);
+    archive.directory(folderPath, '/');
+    await archive.finalize();
+}
