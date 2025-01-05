@@ -8,7 +8,7 @@ export async function archiveFolder(folderPath: string, targetPath: string, zipN
     let outputZipPath = path.join(targetPath, zipName);
     let output = fs.createWriteStream(outputZipPath);
     
-    var archive = archiver('zip');
+    let archive = archiver('zip');
     archive.pipe(output);
     archive.directory(folderPath, '/');
     await archive.finalize();

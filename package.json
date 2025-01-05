@@ -13,12 +13,10 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@types/archiver": "6.0.3",
-    "@types/q":"1.5.8",
     "@xmldom/xmldom": "0.9.6",
     "archiver": "6.0.2",
     "azure-actions-webclient":"1.1.1",
     "minimatch": "10.0.1",
-    "q": "1.5.1",
     "xpath": "0.0.34"
   }
 }
