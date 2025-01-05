@@ -1,10 +1,8 @@
 import * as core from '@actions/core';
 import * as fs from 'node:fs';
 import * as utility from './utility';
-import * as zipUtility from './zipUtility';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
-import { Package } from './packageUtility';
 import { WebClient, WebRequest } from 'azure-actions-webclient/WebClient';
 
 var xPathSelect = require('xpath').select;
@@ -12,8 +10,6 @@ var xPathSelect = require('xpath').select;
 export async function main() {
   let publishProfileContent = core.getInput('publish-profile');
   let packageInput = core.getInput('package');
-
-  let appPackage = new Package(packageInput);
 
   let dom: Document = new DOMParser().parseFromString(publishProfileContent, "application/xml");
 
@@ -26,9 +22,9 @@ export async function main() {
   let password = xPathSelect("string(//publishProfile/@userPWD)", dom, true)
   core.setSecret(password);
 
-  let webPackage = appPackage.getPath();
+  let webPackage = utility.findfiles(packageInput)[0];  // Always use the first package
   let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
-  await zipUtility.archiveFolder(webPackage, tempPackagePath);
+  await utility.archiveFolder(webPackage, tempPackagePath);
 
   const accessToken = Buffer.from(username + ':' + password).toString('base64');
   

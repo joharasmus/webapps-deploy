@@ -3,11 +3,12 @@ import * as core from '@actions/core';
 import * as os from 'node:os';
 import * as path from 'node:path';
 
-import { exist } from './packageUtility';
 import { find, match } from './utilityHelperFunctions';
+import * as fs from 'node:fs';
+import archiver from 'archiver';
 
 
-export function findfiles(filepath){
+export function findfiles(filepath: string): string[] {
 
     core.debug("Finding files matching input: " + filepath);
 
@@ -64,7 +65,7 @@ export function findfiles(filepath){
     return filesList;
 }
 
-export function generateTemporaryFolderOrZipPath(folderPath: string, isFolder: boolean) {
+export function generateTemporaryFolderOrZipPath(folderPath: string, isFolder: boolean): string {
     var randomString = Math.random().toString().split('.')[1];
     var tempPath = path.join(folderPath, 'temp_web_package_' + randomString +  (isFolder ? "" : ".zip"));
     if(exist(tempPath)) {
@@ -72,3 +73,30 @@ export function generateTemporaryFolderOrZipPath(folderPath: string, isFolder: b
     }
     return tempPath;
 }
+
+export function exist(path: string): boolean {
+    let exist = false;
+    try {
+        exist = path && fs.statSync(path) != null;
+    }
+    catch (err) {
+        if (err && err.code === 'ENOENT') {
+            exist = false;
+        }
+        else {
+            throw err;
+        }
+    }
+    return exist;
+}
+
+export async function archiveFolder(folderPath: string, zipName: string) {
+
+    let output = fs.createWriteStream(zipName);
+
+    let archive = archiver('zip');
+    archive.pipe(output);
+    archive.directory(folderPath, '/');
+    await archive.finalize();
+}
+
