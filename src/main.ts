@@ -74,13 +74,14 @@ async function oneDeploy(webPackage: string, scmUri: string, accessToken: string
   }
 }
 
-main();
 export async function archiveFolder(folderPath: string, zipName: string): Promise<void> {
-
-    let output = fs.createWriteStream(zipName);
-
-    let archive = archiver('zip');
-    archive.pipe(output);
-    archive.directory(folderPath, '/');
-    await archive.finalize();
+  
+  let output = fs.createWriteStream(zipName);
+  
+  let archive = archiver('zip');
+  archive.pipe(output);
+  archive.directory(folderPath, '/');
+  await archive.finalize();
 }
+
+main();
