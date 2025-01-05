@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as fs from 'node:fs';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
-import { WebClient, WebRequest } from './WebClient';
+import { WebClient } from './WebClient';
 import archiver from 'archiver';
 
 var xPathSelect = require('xpath').select;
@@ -34,35 +34,29 @@ export async function main() {
 async function oneDeploy(webPackage: string, scmUri: string, accessToken: string): Promise<any> {
   
   let client = new WebClient();
-  
-  let httpRequest: WebRequest = {
-    method: 'POST',
-    uri: scmUri + '/api/publish?async=true&type=zip&clean=true&restart=true',
-    headers: {
-      'Authorization': `Basic ${accessToken}`,
-      'Content-Type': 'application/octet-stream'
-    },
-    body: fs.createReadStream(webPackage)
+
+  let requestUri = scmUri + '/api/publish?async=true&type=zip&clean=true&restart=true';
+  let headers = {
+    'Authorization': `Basic ${accessToken}`,
+    'Content-Type': 'application/octet-stream'
   };
+  let body = fs.createReadStream(webPackage)
   
-  let response = await client.sendRequest(httpRequest);
+  let response = await client.sendRequest('POST', requestUri, headers, body);
   
   if (response.statusCode != 202)
     throw response;
-  
-  let pollRequest: WebRequest = {
-    method: 'GET',
-    uri: response.headers.location,
-    headers: {
-      'Authorization': `Basic ${accessToken}`,
-      'Content-Type': 'application/json; charset=utf-8'
-    }
-  };
+
+  let pollUri = response.headers.location;
+  headers = {
+    'Authorization': `Basic ${accessToken}`,
+    'Content-Type': 'application/json; charset=utf-8'
+  }
   
   while (true) {
     await new Promise(_ => setTimeout(_, 1000));
     
-    let response = await client.sendRequest(pollRequest);
+    let response = await client.sendRequest('GET', pollUri, headers);
     
     if (response.statusCode == 202)
       continue;

@@ -1,13 +1,6 @@
 
 import { HttpClient } from "typed-rest-client/HttpClient";
 
-export interface WebRequest {
-    method: string;
-    uri: string;
-    body?: NodeJS.ReadableStream;
-    headers: any;
-}
-
 export interface WebResponse {
     statusCode: number;
     statusMessage: string;
@@ -20,16 +13,16 @@ export class WebClient {
         this._httpClient = new HttpClient(process.env.AZURE_HTTP_USER_AGENT);
     }
 
-    public async sendRequest(request: WebRequest): Promise<WebResponse> {
+    public async sendRequest(method: string, uri: string, headers: any, body?: NodeJS.ReadableStream): Promise<WebResponse> {
 
-        let response = await this._httpClient.request(request.method, request.uri, request.body || '', request.headers);
-        let body = await response.readBody();
+        let response = await this._httpClient.request(method, uri, body || '', headers);
+        let responseBody = await response.readBody();
 
         return {
             statusCode: response.message.statusCode,
             statusMessage: response.message.statusMessage,
             headers: response.message.headers,
-            body: body
+            body: responseBody
         } as WebResponse;
     }
 
