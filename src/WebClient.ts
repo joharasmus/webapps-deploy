@@ -3,7 +3,7 @@ import { HttpClient } from "typed-rest-client/HttpClient";
 
 export class WebClient {
     constructor() {
-        this._httpClient = new HttpClient(process.env.AZURE_HTTP_USER_AGENT);
+        this._httpClient = new HttpClient(undefined);
     }
 
     public async sendRequest(method: string, uri: string, headers: any, body?: NodeJS.ReadableStream): Promise<any> {
