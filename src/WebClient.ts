@@ -1,5 +1,4 @@
 import * as core from '@actions/core';
-import * as fs from 'fs';
 
 import { HttpClient, HttpClientResponse } from "typed-rest-client/HttpClient";
 
@@ -35,13 +34,8 @@ export class WebClient {
     public async sendRequest(request: WebRequest): Promise<WebResponse> {
 
         try {
-            if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
-                //request.body = fs.createReadStream((request as any).body["path"]);
-            }
-            
-            let response: WebResponse = await this._sendRequestInternal(request);
-            
-            return response;
+            let response = await this._httpClient.request(request.method, request.uri, request.body || '', request.headers);
+            return await this._toWebResponse(response);
         }
         catch (error) {
             if (error.code) {
@@ -52,35 +46,17 @@ export class WebClient {
         }
     }
 
-    private async _sendRequestInternal(request: WebRequest): Promise<WebResponse> {
-        let response: HttpClientResponse = await this._httpClient.request(request.method, request.uri, request.body || '', request.headers);
-
-        if (!response) {
-            throw new Error(`Unexpected end of request. Http request: [${request.method}] ${request.uri} returned a null Http response.`);
-        }
-
-        return await this._toWebResponse(response);
-    }
-
     private async _toWebResponse(response: HttpClientResponse): Promise<WebResponse> { 
         let resBody: any;
         let body = await response.readBody();
-        if (!!body) {
-            resBody = JSON.parse(body);
-        }
+        resBody = JSON.parse(body);
 
         return {
             statusCode: response.message.statusCode as number,
             statusMessage: response.message.statusMessage as string,
             headers: response.message.headers,
-            body: resBody || body
+            body: resBody
         } as WebResponse;
-    }
-
-    private _sleep(sleepDurationInSeconds: number): Promise<any> {
-        return new Promise((resolve) => {
-            setTimeout(resolve, sleepDurationInSeconds * 1000);
-        });
     }
 
     private _httpClient: HttpClient;
