@@ -28,11 +28,11 @@ export async function main() {
 
   let webPackage = appPackage.getPath();
   let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
-  webPackage = await zipUtility.archiveFolder(webPackage, tempPackagePath) as string;
+  await zipUtility.archiveFolder(webPackage, tempPackagePath);
 
   const accessToken = Buffer.from(username + ':' + password).toString('base64');
   
-  let deploymentDetails = await oneDeploy(webPackage, uri, accessToken);
+  let deploymentDetails = await oneDeploy(tempPackagePath, uri, accessToken);
   console.log(deploymentDetails);
 }
 
