@@ -6,12 +6,7 @@ import archiver from 'archiver';
 
 export function findfiles(filepath: string): string[] {
 
-    if(exist(filepath)) {
-        return [filepath];
-    }
-    else {
-        return [];
-    }
+    return [filepath];
 }
 
 export function exist(path: string): boolean {
