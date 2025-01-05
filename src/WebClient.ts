@@ -1,6 +1,5 @@
 
 import { HttpClient } from "typed-rest-client/HttpClient";
-import { RequestClient } from './RequestClient';
 
 export interface WebRequest {
     method: string;
@@ -18,7 +17,7 @@ export interface WebResponse {
 
 export class WebClient {
     constructor() {
-        this._httpClient = new RequestClient().instance;
+        this._httpClient = new HttpClient(process.env.AZURE_HTTP_USER_AGENT);
     }
 
     public async sendRequest(request: WebRequest): Promise<WebResponse> {
