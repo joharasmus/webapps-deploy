@@ -33,42 +33,22 @@ export class WebClient {
     }
 
     public async sendRequest(request: WebRequest): Promise<WebResponse> {
-        let i = 0;
-        let retryCount = 1;
-        let retryIntervalInSeconds = 2;
-        let retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
-        let retriableStatusCodes = [408, 409, 500, 502, 503, 504];
-        let timeToWait: number = retryIntervalInSeconds;
 
-        while (true) {
-            try {
-                if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
-                    request.body = fs.createReadStream((request as any).body["path"]);
-                }
-
-                let response: WebResponse = await this._sendRequestInternal(request);
-                
-                if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++i < retryCount) {
-                    await this._sleep(timeToWait);
-                    timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
-                    continue;
-                }
-
-                return response;
+        try {
+            if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
+                request.body = fs.createReadStream((request as any).body["path"]);
             }
-            catch (error) {
-                if (retriableErrorCodes.indexOf(error.code) != -1 && ++i < retryCount) {
-                    await this._sleep(timeToWait);
-                    timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
-                }
-                else {
-                    if (error.code) {
-                        core.error(error.code);
-                    }
-
-                    throw error;
-                }
+            
+            let response: WebResponse = await this._sendRequestInternal(request);
+            
+            return response;
+        }
+        catch (error) {
+            if (error.code) {
+                core.error(error.code);
             }
+            
+            throw error;
         }
     }
 
