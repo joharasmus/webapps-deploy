@@ -18,7 +18,7 @@ export interface WebResponse {
 
 export class WebClient {
     constructor() {
-        this._httpClient = RequestClient.GetInstance();
+        this._httpClient = new RequestClient().instance;
     }
 
     public async sendRequest(request: WebRequest): Promise<WebResponse> {
