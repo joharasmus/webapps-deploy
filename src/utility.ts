@@ -3,7 +3,6 @@ import * as core from '@actions/core';
 import * as os from 'node:os';
 import * as path from 'node:path';
 
-import { archiveFolder } from './zipUtility';
 import { exist } from './packageUtility';
 import { find, match } from './utilityHelperFunctions';
 
@@ -72,38 +71,4 @@ export function generateTemporaryFolderOrZipPath(folderPath: string, isFolder: b
         return generateTemporaryFolderOrZipPath(folderPath, isFolder);
     }
     return tempPath;
-}
-
-export async function archiveFolderForDeployment(isFolderBasedDeployment: boolean, folderPath: string) {
-    var webDeployPkg;
-
-    if(isFolderBasedDeployment) {
-        webDeployPkg = folderPath;
-    }
-    else {
-        var tempWebPackageZip = generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
-        webDeployPkg = await archiveFolder(folderPath, "", tempWebPackageZip);
-    }
-
-    return {
-        "webDeployPkg": webDeployPkg,
-        "tempPackagePath": webDeployPkg
-    };
-}
-
-export function getFileNameFromPath(filePath: string, extension?: string): string {
-    var isWindows = os.type().match(/^Win/);
-    var fileName;
-    if(isWindows) {
-        fileName = path.win32.basename(filePath, extension);
-    }
-    else {
-        fileName = path.posix.basename(filePath, extension);
-    }
-
-    return fileName;
-}
-
-export function getTempDirectory(): string {
-    return `${process.env.RUNNER_TEMP}` || os.tmpdir();
 }

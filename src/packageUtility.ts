@@ -1,14 +1,5 @@
-import * as core from '@actions/core';
 import * as fs from 'node:fs';
 import * as utility from './utility';
-import * as zipUtility from './zipUtility';
-
-export enum PackageType {
-    war,
-    zip,
-    jar,
-    folder
-}
 
 export class PackageUtility {
     public static getPackagePath(packagePath: string): string {
@@ -28,49 +19,13 @@ export class PackageUtility {
 export class Package {
     constructor(packagePath: string) {
         this._path = PackageUtility.getPackagePath(packagePath);
-        this._isMSBuildPackage = undefined;
     }
 
     public getPath(): string {
         return this._path;
     }
-
-    public async isMSBuildPackage(): Promise<boolean> {
-        if(this._isMSBuildPackage == undefined) {
-            this._isMSBuildPackage = await this.getPackageType() != PackageType.folder && await zipUtility.checkIfFilesExistsInZip(this._path, ["parameters.xml", "systeminfo.xml"]);
-            core.debug("Is the package an msdeploy package : " + this._isMSBuildPackage);
-        }
-        return this._isMSBuildPackage;
-    }
-
-    public getPackageType(): PackageType {
-        if (this._packageType == undefined) {
-            if (!exist(this._path)) {
-                throw new Error('Invalidwebapppackageorfolderpathprovided' + this._path);
-            } else{
-                if (this._path.toLowerCase().endsWith('.war')) {
-                    this._packageType = PackageType.war;
-                    core.debug("This is war package ");
-                } else if(this._path.toLowerCase().endsWith('.jar')){
-                    this._packageType = PackageType.jar;
-                    core.debug("This is jar package ");
-                } else if (this._path.toLowerCase().endsWith('.zip')){
-                    this._packageType = PackageType.zip;
-                    core.debug("This is zip package ");
-                } else if(fs.statSync(this._path).isDirectory()){
-                    this._packageType = PackageType.folder;
-                    core.debug("This is folder package ");
-                } else{
-                    throw new Error('Invalid App Service package or folder path provided: ' + this._path);
-                }
-            }
-        }
-        return this._packageType;
-    }
     
     private _path: string;
-    private _isMSBuildPackage?: boolean;
-    private _packageType?: PackageType;
 }
 
 export function exist(path) {
