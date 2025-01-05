@@ -8,9 +8,8 @@ import { RequestClient } from './RequestClient';
 export interface WebRequest {
     method: string;
     uri: string;
-    // body can be string or ReadableStream
-    body?: string | NodeJS.ReadableStream;
-    headers?: any;
+    body?: NodeJS.ReadableStream;
+    headers: any;
 }
 
 export interface WebResponse {
@@ -28,22 +27,17 @@ export interface WebRequestOptions {
     retryRequestTimedout?: boolean;
 }
 
-const DEFAULT_RETRIABLE_ERROR_CODES = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
-const DEFAULT_RETRIABLE_STATUS_CODES = [408, 409, 500, 502, 503, 504];
-const DEFAULT_RETRY_COUNT = 5;
-const DEFAULT_RETRY_INTERVAL_SECONDS = 2;
-
 export class WebClient {
     constructor() {
         this._httpClient = RequestClient.GetInstance();
     }
 
-    public async sendRequest(request: WebRequest, options?: WebRequestOptions): Promise<WebResponse> {
+    public async sendRequest(request: WebRequest): Promise<WebResponse> {
         let i = 0;
-        let retryCount = options && options.retryCount ? options.retryCount : DEFAULT_RETRY_COUNT;
-        let retryIntervalInSeconds = options && options.retryIntervalInSeconds ? options.retryIntervalInSeconds : DEFAULT_RETRY_INTERVAL_SECONDS;
-        let retriableErrorCodes = options && options.retriableErrorCodes ? options.retriableErrorCodes : DEFAULT_RETRIABLE_ERROR_CODES;
-        let retriableStatusCodes = options && options.retriableStatusCodes ? options.retriableStatusCodes : DEFAULT_RETRIABLE_STATUS_CODES;
+        let retryCount = 3;
+        let retryIntervalInSeconds = 2;
+        let retriableErrorCodes = ["ETIMEDOUT", "ECONNRESET", "ENOTFOUND", "ESOCKETTIMEDOUT", "ECONNREFUSED", "EHOSTUNREACH", "EPIPE", "EA_AGAIN"];
+        let retriableStatusCodes = [408, 409, 500, 502, 503, 504];
         let timeToWait: number = retryIntervalInSeconds;
 
         while (true) {
@@ -55,7 +49,6 @@ export class WebClient {
                 let response: WebResponse = await this._sendRequestInternal(request);
                 
                 if (retriableStatusCodes.indexOf(response.statusCode) != -1 && ++i < retryCount) {
-                    core.debug(`Encountered a retriable status code: ${response.statusCode}. Message: '${response.statusMessage}'.`);
                     await this._sleep(timeToWait);
                     timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
                     continue;
@@ -65,7 +58,6 @@ export class WebClient {
             }
             catch (error) {
                 if (retriableErrorCodes.indexOf(error.code) != -1 && ++i < retryCount) {
-                    core.debug(`Encountered a retriable error:${error.code}. Message: ${error.message}.`);
                     await this._sleep(timeToWait);
                     timeToWait = timeToWait * retryIntervalInSeconds + retryIntervalInSeconds;
                 }
@@ -81,7 +73,6 @@ export class WebClient {
     }
 
     private async _sendRequestInternal(request: WebRequest): Promise<WebResponse> {
-        core.debug(`[${request.method}] ${request.uri}`);
         let response: HttpClientResponse = await this._httpClient.request(request.method, request.uri, request.body || '', request.headers);
 
         if (!response) {
@@ -92,16 +83,10 @@ export class WebClient {
     }
 
     private async _toWebResponse(response: HttpClientResponse): Promise<WebResponse> { 
-        let resBody;
+        let resBody: any;
         let body = await response.readBody();
         if (!!body) {
-            try {
-                resBody = JSON.parse(body);
-            }
-            catch (error) {
-                core.debug(`Could not parse response body.`);
-                core.debug(JSON.stringify(error));
-            }
+            resBody = JSON.parse(body);
         }
 
         return {
