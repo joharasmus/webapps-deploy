@@ -6,9 +6,7 @@ export class RequestClient {
     public options: IRequestOptions;
 
     public constructor() {
-        this.options = {
-            ignoreSslError: false
-        };
+        this.options = { };
         this.instance = new HttpClient(`${process.env.AZURE_HTTP_USER_AGENT}`, undefined, this.options);
     }
 }
