@@ -24,7 +24,7 @@ export async function main() {
   core.setSecret(password);
 
   let webPackage = utility.findfiles(packageInput)[0];  // Always use the first package
-  let tempPackagePath = path.join(process.env.RUNNER_TEMP, ".zip");
+  let tempPackagePath = process.env.RUNNER_TEMP + ".zip";
   await utility.archiveFolder(webPackage, tempPackagePath);
 
   const accessToken = Buffer.from(username + ':' + password).toString('base64');
