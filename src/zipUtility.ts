@@ -3,10 +3,10 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import archiver from 'archiver';
 
-export async function archiveFolder(folderPath: string, targetPath: string, zipName: string) {
+export async function archiveFolder(folderPath: string, zipName: string) {
 
-    let outputZipPath = path.join(targetPath, zipName);
-    let output = fs.createWriteStream(outputZipPath);
+    let outputZipPath = path.join("", zipName);
+    let output = fs.createWriteStream(zipName);
     
     let archive = archiver('zip');
     archive.pipe(output);

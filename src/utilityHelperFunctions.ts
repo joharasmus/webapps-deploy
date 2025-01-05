@@ -35,7 +35,6 @@ export function find(findPath: string): string[] {
 
         // push the first item
         let stack: _FindItem[] = [new _FindItem(findPath, 1)];
-        let traversalChain: string[] = []; // used to detect cycles
 
         while (stack.length) {
             // pop the next item and push to the result array

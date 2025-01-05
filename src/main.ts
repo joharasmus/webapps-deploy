@@ -28,7 +28,7 @@ export async function main() {
 
   let webPackage = appPackage.getPath();
   let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
-  webPackage = await zipUtility.archiveFolder(webPackage, "", tempPackagePath) as string;
+  webPackage = await zipUtility.archiveFolder(webPackage, tempPackagePath) as string;
 
   const accessToken = Buffer.from(username + ':' + password).toString('base64');
   
