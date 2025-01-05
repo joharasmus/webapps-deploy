@@ -13,5 +13,5 @@ export async function archiveFolder(folderPath: string, zipName: string) {
     archive.directory(folderPath, '/');
     await archive.finalize();
 
-    return outputZipPath;
+    return zipName;
 }
