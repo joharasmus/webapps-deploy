@@ -4,6 +4,7 @@ import * as utility from './utility';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
 import { WebClient, WebRequest } from 'azure-actions-webclient/WebClient';
+import path from 'node:path';
 
 var xPathSelect = require('xpath').select;
 
@@ -23,7 +24,7 @@ export async function main() {
   core.setSecret(password);
 
   let webPackage = utility.findfiles(packageInput)[0];  // Always use the first package
-  let tempPackagePath = utility.generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`);
+  let tempPackagePath = path.join(process.env.RUNNER_TEMP, ".zip");
   await utility.archiveFolder(webPackage, tempPackagePath);
 
   const accessToken = Buffer.from(username + ':' + password).toString('base64');

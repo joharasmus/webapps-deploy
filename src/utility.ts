@@ -54,11 +54,6 @@ export function findfiles(filepath: string): string[] {
     return filesList;
 }
 
-export function generateTemporaryFolderOrZipPath(folderPath: string): string {
-    var tempPath = path.join(folderPath, ".zip");
-    return tempPath;
-}
-
 export function exist(path: string): boolean {
     let exist = false;
     try {
