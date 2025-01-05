@@ -1,34 +1,10 @@
 
 import * as core from '@actions/core';
 import * as fs from 'node:fs';
-import * as io from '@actions/io';
 import * as path from 'node:path';
-import * as Q from 'q';
-import * as StreamZip from 'node-stream-zip';
-var DecompressZip = require('decompress-zip');
-var archiver = require('archiver');
-
-import { exist } from "./packageUtility";
-
-export async function unzip(zipLocation, unzipLocation) {
-    var defer = Q.defer();
-    if(exist(unzipLocation)) {
-      await io.rmRF(unzipLocation);
-    }
-    var unzipper = new DecompressZip(zipLocation);
-    console.log('extracting ' + zipLocation + ' to ' + unzipLocation);
-    unzipper.on('error', function (error) {
-        defer.reject(error);
-    });
-    unzipper.on('extract', function (log) {
-        console.log('extracted ' + zipLocation + ' to ' + unzipLocation + ' Successfully');
-        defer.resolve(unzipLocation);
-    });
-    unzipper.extract({
-      path: unzipLocation
-    });
-    return defer.promise;
-}
+import Q from 'q';
+import StreamZip from 'node-stream-zip';
+import archiver from 'archiver';
 
 export async function archiveFolder(folderPath, targetPath, zipName) {
     var defer = Q.defer();
@@ -50,25 +26,6 @@ export async function archiveFolder(folderPath, targetPath, zipName) {
     archive.finalize();
 
     return defer.promise;
-}
-
-/**
- *  Returns array of files present in archived package
- */
-export async function getArchivedEntries(archivedPackage: string)  {
-    var deferred = Q.defer();
-    var unzipper = new DecompressZip(archivedPackage);
-    unzipper.on('error', function (error) {
-        deferred.reject(error);
-    });
-    unzipper.on('list', function (files) {
-        var packageComponent = {
-            "entries":files
-        };
-        deferred.resolve(packageComponent); 
-    });
-    unzipper.list();
-    return deferred.promise;
 }
 
 export function checkIfFilesExistsInZip(archivedPackage: string, files: string[]) {

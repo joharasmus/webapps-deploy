@@ -2,33 +2,7 @@
 import * as core from '@actions/core';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-var shell = require('shelljs');
-var minimatch = require('minimatch');
-
-export function cp(source: string, dest: string, options?: string, continueOnError?: boolean): void {
-    if (options) {
-        shell.cp(options, source, dest);
-    }
-    else {
-        shell.cp(source, dest);
-    }
-
-    _checkShell('cp', continueOnError);
-}
-
-export function _checkShell(cmd: string, continueOnError?: boolean) {
-    var se = shell.error();
-
-    if (se) {
-        core.debug(cmd + ' failed');
-        var errMsg = 'Failed ' + cmd + ': ' + se;
-        core.debug(errMsg);
-
-        if (!continueOnError) {
-            throw new Error(errMsg);
-        }
-    }
-}
+import minimatch from 'minimatch';
 
 export function find(findPath: string): string[] {
     if (!findPath) {
