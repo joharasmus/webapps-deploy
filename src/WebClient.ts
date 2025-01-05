@@ -1,7 +1,5 @@
-import * as core from '@actions/core';
 
-import { HttpClient, HttpClientResponse } from "typed-rest-client/HttpClient";
-
+import { HttpClient } from "typed-rest-client/HttpClient";
 import { RequestClient } from './RequestClient';
 
 export interface WebRequest {
@@ -18,14 +16,6 @@ export interface WebResponse {
     body: any;
 }
 
-export interface WebRequestOptions {
-    retriableErrorCodes?: string[];
-    retryCount?: number;
-    retryIntervalInSeconds?: number;
-    retriableStatusCodes?: number[];
-    retryRequestTimedout?: boolean;
-}
-
 export class WebClient {
     constructor() {
         this._httpClient = RequestClient.GetInstance();
@@ -33,25 +23,12 @@ export class WebClient {
 
     public async sendRequest(request: WebRequest): Promise<WebResponse> {
 
-        try {
-            let response = await this._httpClient.request(request.method, request.uri, request.body || '', request.headers);
-            return await this._toWebResponse(response);
-        }
-        catch (error) {
-            if (error.code) {
-                core.error(error.code);
-            }
-            
-            throw error;
-        }
-    }
-
-    private async _toWebResponse(response: HttpClientResponse): Promise<WebResponse> { 
+        let response = await this._httpClient.request(request.method, request.uri, request.body || '', request.headers);
         let body = await response.readBody();
 
         return {
-            statusCode: response.message.statusCode as number,
-            statusMessage: response.message.statusMessage as string,
+            statusCode: response.message.statusCode,
+            statusMessage: response.message.statusMessage,
             headers: response.message.headers,
             body: body
         } as WebResponse;
