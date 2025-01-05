@@ -36,7 +36,7 @@ export class WebClient {
 
         try {
             if (request.body && typeof(request.body) !== 'string' && !request.body["readable"]) {
-                request.body = fs.createReadStream((request as any).body["path"]);
+                //request.body = fs.createReadStream((request as any).body["path"]);
             }
             
             let response: WebResponse = await this._sendRequestInternal(request);
