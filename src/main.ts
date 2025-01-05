@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as fs from 'node:fs';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
-import { WebClient, WebRequest } from 'azure-actions-webclient/WebClient';
+import { WebClient, WebRequest } from './WebClient';
 import archiver from 'archiver';
 
 var xPathSelect = require('xpath').select;

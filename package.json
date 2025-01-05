@@ -15,7 +15,7 @@
     "@types/archiver": "6.0.3",
     "@xmldom/xmldom": "0.9.6",
     "archiver": "6.0.2",
-    "azure-actions-webclient":"1.1.1",
+    "typed-rest-client": "2.1.0",
     "xpath": "0.0.34"
   }
 }
