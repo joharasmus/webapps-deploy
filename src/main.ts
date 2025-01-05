@@ -22,7 +22,7 @@ export async function main() {
   let password = xPathSelect("string(//publishProfile/@userPWD)", publishProfileXml, true)
   core.setSecret(password);
 
-  let webPackage = utility.findfiles(packageInput)[0];  // Always use the first package
+  let webPackage = packageInput;
   let tempPackagePath = webPackage + ".zip";
   await utility.archiveFolder(webPackage, tempPackagePath);
 

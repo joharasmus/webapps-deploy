@@ -4,9 +4,9 @@ import * as fs from 'node:fs';
 import archiver from 'archiver';
 
 
-export function findfiles(filepath: string): string[] {
+export function findfiles(filepath: string): string {
 
-    return [filepath];
+    return filepath;
 }
 
 export function exist(path: string): boolean {
