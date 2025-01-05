@@ -2,8 +2,8 @@
 import * as core from '@actions/core';
 import * as os from 'node:os';
 import * as path from 'node:path';
-import * as zipUtility from './zipUtility';
 
+import { archiveFolder } from './zipUtility';
 import { exist } from './packageUtility';
 import { find, match } from './utilityHelperFunctions';
 
@@ -82,7 +82,7 @@ export async function archiveFolderForDeployment(isFolderBasedDeployment: boolea
     }
     else {
         var tempWebPackageZip = generateTemporaryFolderOrZipPath(`${process.env.RUNNER_TEMP}`, false);
-        webDeployPkg = await zipUtility.archiveFolder(folderPath, "", tempWebPackageZip);
+        webDeployPkg = await archiveFolder(folderPath, "", tempWebPackageZip);
     }
 
     return {
