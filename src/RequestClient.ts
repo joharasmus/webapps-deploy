@@ -7,13 +7,8 @@ export class RequestClient {
 
     public constructor() {
         this.options = {};
-        let ignoreSslErrors: string = `${process.env.ACTIONS_AZURE_REST_IGNORE_SSL_ERRORS}`;
+        let ignoreSslErrors: string = "false";
         this.options.ignoreSslError = !!ignoreSslErrors && ignoreSslErrors.toLowerCase() === "true";
         this.instance = new HttpClient(`${process.env.AZURE_HTTP_USER_AGENT}`, undefined, this.options);
-    }
-
-    public static GetInstance(): HttpClient {
-        new RequestClient();
-        return new RequestClient().instance;
     }
 }
