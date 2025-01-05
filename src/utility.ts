@@ -54,12 +54,9 @@ export function findfiles(filepath: string): string[] {
     return filesList;
 }
 
-export function generateTemporaryFolderOrZipPath(folderPath: string, isFolder: boolean): string {
+export function generateTemporaryFolderOrZipPath(folderPath: string): string {
     var randomString = Math.random().toString().split('.')[1];
-    var tempPath = path.join(folderPath, 'temp_web_package_' + randomString +  (isFolder ? "" : ".zip"));
-    if(exist(tempPath)) {
-        return generateTemporaryFolderOrZipPath(folderPath, isFolder);
-    }
+    var tempPath = path.join(folderPath, 'temp_' + randomString +  ".zip");
     return tempPath;
 }
 
