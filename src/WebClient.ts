@@ -47,15 +47,13 @@ export class WebClient {
     }
 
     private async _toWebResponse(response: HttpClientResponse): Promise<WebResponse> { 
-        let resBody: any;
         let body = await response.readBody();
-        resBody = JSON.parse(body);
 
         return {
             statusCode: response.message.statusCode as number,
             statusMessage: response.message.statusMessage as string,
             headers: response.message.headers,
-            body: resBody
+            body: body
         } as WebResponse;
     }
 
