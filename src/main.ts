@@ -11,15 +11,15 @@ export async function main() {
   let publishProfileContent = core.getInput('publish-profile');
   let packageInput = core.getInput('package');
 
-  let dom: Document = new DOMParser().parseFromString(publishProfileContent, "application/xml");
+  let publishProfileXml: Document = new DOMParser().parseFromString(publishProfileContent, "application/xml");
 
-  let uri = xPathSelect("string(//publishProfile/@publishUrl)", dom, true);
+  let uri = xPathSelect("string(//publishProfile/@publishUrl)", publishProfileXml, true);
   uri = `https://${uri}`;
 
-  let username = xPathSelect("string(//publishProfile/@userName)", dom, true);
+  let username = xPathSelect("string(//publishProfile/@userName)", publishProfileXml, true);
   core.setSecret(username);
 
-  let password = xPathSelect("string(//publishProfile/@userPWD)", dom, true)
+  let password = xPathSelect("string(//publishProfile/@userPWD)", publishProfileXml, true)
   core.setSecret(password);
 
   let webPackage = utility.findfiles(packageInput)[0];  // Always use the first package
