@@ -22,12 +22,16 @@ export async function main() {
   let password = xPathSelect("string(//publishProfile/@userPWD)", publishProfileXml, true)
   core.setSecret(password);
 
-  let tempPackagePath = packageInput + ".zip";
-  await archiveFolder(packageInput, tempPackagePath);
+  let zipPackagePath = packageInput + ".zip";
+  let output = fs.createWriteStream(zipPackagePath);
+  let archive = archiver('zip');
+  archive.pipe(output);
+  archive.directory(packageInput, '/');
+  await archive.finalize();
 
   const accessToken = Buffer.from(username + ':' + password).toString('base64');
   
-  let deploymentDetails = await oneDeploy(tempPackagePath, uri, accessToken);
+  let deploymentDetails = await oneDeploy(zipPackagePath, uri, accessToken);
   console.log(deploymentDetails);
 }
 
@@ -66,16 +70,6 @@ async function oneDeploy(webPackage: string, scmUri: string, accessToken: string
     
     throw response; //another statuscode indicates something is wrong
   }
-}
-
-export async function archiveFolder(folderPath: string, zipName: string): Promise<void> {
-  
-  let output = fs.createWriteStream(zipName);
-  
-  let archive = archiver('zip');
-  archive.pipe(output);
-  archive.directory(folderPath, '/');
-  await archive.finalize();
 }
 
 main();
