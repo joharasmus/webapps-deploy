@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as fs from 'node:fs';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
-import archiver from './archiver/core';
+import Archiver from '../lib/core';
 import { HttpClient } from 'typed-rest-client/HttpClient';
 
 var xPathSelect = require('xpath').select;
@@ -24,7 +24,7 @@ export async function main() {
 
   let zipPackagePath = packageInput + ".zip";
   let output = fs.createWriteStream(zipPackagePath);
-  let archive = archiver('zip');
+  let archive = Archiver('zip');
   archive.pipe(output);
   archive.directory(packageInput, '/');
   await archive.finalize();
