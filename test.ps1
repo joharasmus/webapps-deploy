@@ -4,3 +4,4 @@ git commit -m $commitMsg;
 git push; 
 gh release delete v2 -y --cleanup-tag;  
 gh release create v2 -n "";
+gh workflow run -R 'joharasmus/moreFairStats' 'morefairstats.yml';
