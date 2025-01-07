@@ -24,7 +24,7 @@ export async function main() {
 
   let zipPackagePath = packageInput + ".zip";
   let output = fs.createWriteStream(zipPackagePath);
-  let archive = Archiver();
+  let archive = new Archiver();
   archive.pipe(output);
   archive.directory(packageInput, '/');
   await archive.finalize();
