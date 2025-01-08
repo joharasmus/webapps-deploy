@@ -26,8 +26,7 @@ export async function main() {
   let output = fs.createWriteStream(zipPackagePath);
   let archive = new Archiver();
   archive.pipe(output);
-  archive.directory(packageInput);
-  await archive.finalize();
+  await archive.directory(packageInput);
 
   const accessToken = Buffer.from(username + ':' + password).toString('base64');
   
