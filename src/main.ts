@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import * as fs from 'node:fs';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
-const Archiver = require('../lib/core').Archiver;
+const Archiver = require('../lib/core');
 import { HttpClient } from 'typed-rest-client/HttpClient';
 
 const xPathSelect = require('xpath').select;
