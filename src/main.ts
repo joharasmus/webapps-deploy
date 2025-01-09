@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import * as fs from 'node:fs';
+const fs = require('node:fs');
 
 import { Document, DOMParser } from '@xmldom/xmldom';
 const Archiver = require('../lib/core');
