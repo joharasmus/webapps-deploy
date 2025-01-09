@@ -2,10 +2,10 @@ import * as core from '@actions/core';
 import * as fs from 'node:fs';
 
 import { Document, DOMParser } from '@xmldom/xmldom';
-let { Archiver } = require('../lib/core');
+const Archiver = require('../lib/core').Archiver;
 import { HttpClient } from 'typed-rest-client/HttpClient';
 
-var xPathSelect = require('xpath').select;
+const xPathSelect = require('xpath').select;
 
 export async function main() {
   let publishProfileContent = core.getInput('publish-profile');
