@@ -12,6 +12,6 @@
     "readdir-glob": "2.0.1",
     "typed-rest-client": "2.1.0",
     "xpath": "0.0.34",
-    "zip-stream": "5.0.2"
+    "zip-stream": "6.0.0"
   }
 }
