@@ -34,7 +34,7 @@ async function main() {
   console.log(deploymentDetails);
 }
 
-async function oneDeploy(webPackage: string, scmUri: string, accessToken: string): Promise<any> {
+async function oneDeploy(webPackage, scmUri, accessToken) {
 
   let httpClient = new HttpClient(undefined);
 
