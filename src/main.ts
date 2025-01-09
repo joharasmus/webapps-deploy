@@ -1,4 +1,4 @@
-import * as core from '@actions/core';
+const core = require('@actions/core');
 const fs = require('node:fs');
 
 import { Document, DOMParser } from '@xmldom/xmldom';
