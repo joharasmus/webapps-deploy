@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const fs = require('node:fs');
+const DOMParser = require('@xmldom/xmldom').DOMParser;
 
-import { Document, DOMParser } from '@xmldom/xmldom';
 const Archiver = require('../lib/core');
 import { HttpClient } from 'typed-rest-client/HttpClient';
 
@@ -11,7 +11,7 @@ export async function main() {
   let publishProfileContent = core.getInput('publish-profile');
   let packageInput = core.getInput('package');
 
-  let publishProfileXml: Document = new DOMParser().parseFromString(publishProfileContent, "application/xml");
+  let publishProfileXml = new DOMParser().parseFromString(publishProfileContent, "application/xml");
 
   let uri = xPathSelect("string(//publishProfile/@publishUrl)", publishProfileXml, true);
   uri = `https://${uri}`;
