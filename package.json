@@ -2,14 +2,7 @@
   "name": "webapps-deploy-dotnet",
   "version": "1.0.0",
   "main": "lib/main.js",
-  "scripts": {
-    "build": "tsc"
-  },
   "license": "MIT",
-  "devDependencies": {
-    "@types/node": "22.10.5",
-    "typescript": "5.7.2"
-  },
   "dependencies": {
     "@actions/core": "1.11.1",
     "@xmldom/xmldom": "0.9.6",
