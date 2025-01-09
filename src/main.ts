@@ -3,11 +3,11 @@ const fs = require('node:fs');
 const DOMParser = require('@xmldom/xmldom').DOMParser;
 
 const Archiver = require('../lib/core');
-import { HttpClient } from 'typed-rest-client/HttpClient';
+const HttpClient = require('typed-rest-client/HttpClient').HttpClient;
 
 const xPathSelect = require('xpath').select;
 
-export async function main() {
+async function main() {
   let publishProfileContent = core.getInput('publish-profile');
   let packageInput = core.getInput('package');
 
