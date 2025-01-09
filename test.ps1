@@ -7,4 +7,5 @@ gh release create v2 -n "";
 gh workflow run -R 'joharasmus/moreFairStats' 'morefairstats.yml';
 Start-Sleep -Seconds 5;
 $runId = gh run list -R 'joharasmus/moreFairStats' --workflow=morefairstats.yml --json databaseId -q '.[0].databaseId';
+gh run watch -i 1 -R 'joharasmus/moreFairStats' $runId;
 gh run view -R 'joharasmus/moreFairStats' $runId --log;
