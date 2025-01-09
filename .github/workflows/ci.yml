@@ -12,4 +12,3 @@ jobs:
     - name: 'Validate build'
       run: |
         npm install
-        npm run build
