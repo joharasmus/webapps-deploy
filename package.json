@@ -7,8 +7,7 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@xmldom/xmldom": "0.9.6",
-    "minimatch": "9.0.5",
-    "readdir-glob": "2.0.1",
+    "minimatch": "10.0.1",
     "typed-rest-client": "2.1.0",
     "xpath": "0.0.34",
     "zip-stream": "7.0.2"
