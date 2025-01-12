@@ -10,7 +10,6 @@
     "compress-commons": "7.0.0",
     "normalize-path": "3.0.0",
     "typed-rest-client": "2.1.0",
-    "xpath": "0.0.34",
-    "zip-stream": "7.0.2"
+    "xpath": "0.0.34"
   }
 }
