@@ -7,7 +7,6 @@
   "dependencies": {
     "@xmldom/xmldom": "0.9.7",
     "crc-32": "1.2.2",
-    "qs": "6.14.0",
     "xpath": "0.0.34"
   }
 }
